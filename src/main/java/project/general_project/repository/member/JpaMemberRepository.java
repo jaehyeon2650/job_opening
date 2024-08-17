@@ -5,10 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import project.general_project.domain.Member;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class JpaMemberRepository implements MemberRepository{
     private final EntityManager em;
+
     @Override
     public void save(Member member) {
         em.persist(member);
@@ -17,5 +21,12 @@ public class JpaMemberRepository implements MemberRepository{
     @Override
     public Member findById(Long id) {
         return em.find(Member.class,id);
+    }
+
+    @Override
+    public Optional<Member> findByUserID(String userId){
+        List<Member> members = em.createQuery("select m from Member m where m.userId=:userId", Member.class).setParameter("userId", userId)
+                .getResultList();
+        return members.stream().findAny();
     }
 }
