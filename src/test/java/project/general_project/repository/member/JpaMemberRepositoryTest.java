@@ -1,7 +1,6 @@
 package project.general_project.repository.member;
 
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
