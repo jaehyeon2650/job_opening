@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action th:method="post" th:object="${joinForm}">
+    <label for="username">이름</label>
+    <input type="text" th:field="*{username}" id="username" />
+    <label for="userId">아이디</label>
+    <input type="text" th:field="*{userId}" id="userId"/>
+    <label for="password">비밀번호</label>
+    <input type="password" th:field="*{password}" id="password">
+    <label for="zipcode">우편번호</label>
+    <input type="text" th:field="*{zipcode}" id="zipcode">
+    <label for="city">시,군</label>
+    <input type="text" th:field="*{city}" id="city">
+    <label for="detailAddress">세부 주소</label>
+    <input type="text" th:field="*{detailAddress}" id="detailAddress">
+    <button type="submit">회원가입</button>
+</form>
+</body>
+</html>
