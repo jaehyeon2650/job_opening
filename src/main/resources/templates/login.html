@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link th:href="@{/css/login.css}"
+          href="../static/css/login.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="login-container">
+    <form th:action th:method="post" th:object="${loginForm}" class="login-form">
+        <h2 class="login-title">로그인</h2>
+        <div th:if="${#fields.hasGlobalErrors()}" class="error">
+            <p th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
+        </div>
+        <label for="id" class="login-label">아이디</label>
+        <input type="text" th:field="*{id}" id="id" class="login-input" />
+        <label for="password" class="login-label">비밀번호</label>
+        <input type="password" th:field="*{password}" id="password" class="login-input" />
+        <button type="submit" class="login-button">로그인</button>
+        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    </form>
+</div>
+</body>
+</html>
