@@ -14,9 +14,11 @@ import project.general_project.domain.Member;
 import project.general_project.service.LoginService;
 import project.general_project.service.MemberService;
 import project.general_project.validation.JoinValidator;
+
 import project.general_project.web.SessionConst;
 import project.general_project.web.join.JoinForm;
 import project.general_project.web.login.Login;
+
 import project.general_project.web.login.LoginForm;
 
 @Slf4j
@@ -33,16 +35,17 @@ public class MemberController {
         dataBinder.addValidators(joinValidator);
     }
 
+
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, @Login Member member) {
         if(member!=null){
             return "redirect:/loginHome";
         }
-        return "login";
-    }
+
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURI){
+
         if(bindingResult.hasErrors()){
             return "login";
         }
@@ -52,9 +55,11 @@ public class MemberController {
             bindingResult.reject("loginFail","아이디 혹은 비밀번호가 잘못되었습니다.");
             return "login";
         }
+
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER,loginMember);
         return "redirect:"+redirectURI;
+
     }
 
     @GetMapping("/join")
@@ -76,7 +81,6 @@ public class MemberController {
         }
         return "redirect:/";
     }
-
     @GetMapping("/logout")
     public String logout(HttpServletRequest request){
         HttpSession session = request.getSession(false);
