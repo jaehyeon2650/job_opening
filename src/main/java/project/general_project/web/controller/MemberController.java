@@ -4,13 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import project.general_project.domain.Address;
 import project.general_project.domain.Member;
 import project.general_project.service.LoginService;
 import project.general_project.service.MemberService;
+import project.general_project.validation.JoinValidator;
 import project.general_project.web.join.JoinForm;
 import project.general_project.web.login.LoginForm;
 
@@ -21,6 +25,13 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
+    private final JoinValidator joinValidator;
+
+    @InitBinder("joinForm")
+    public void init(WebDataBinder dataBinder){
+        dataBinder.addValidators(joinValidator);
+    }
+
     @GetMapping("/")
     public String home(){
         return "home";
@@ -46,12 +57,15 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute("joinForm") JoinForm joinForm,BindingResult bindingResult){
+    public String join(@Validated @ModelAttribute("joinForm") JoinForm joinForm, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "join";
+        }
         Address address=Address.createAddress(joinForm.getZipcode(),joinForm.getCity(),joinForm.getDetailAddress());
         Member member=Member.createMember(joinForm.getUsername(),joinForm.getUserId(),joinForm.getPassword(),address);
         Long save = memberService.save(member);
         if(save==-1){
-            bindingResult.reject("duplicateId","아이디가 중복입니다.");
+            bindingResult.reject("duplicateId");
             return "join";
         }
         return "redirect:/";
