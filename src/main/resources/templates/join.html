@@ -15,16 +15,32 @@
         </div>
         <label for="username" class="join-label">이름</label>
         <input type="text" th:field="*{username}" id="username" class="join-input" />
+        <p th:errors="*{username}" class="error"></p>
+
         <label for="userId" class="join-label">아이디</label>
         <input type="text" th:field="*{userId}" id="userId" class="join-input"/>
+        <p th:errors="*{userId}" class="error"></p>
+
         <label for="password" class="join-label">비밀번호</label>
         <input type="password" th:field="*{password}" id="password" class="join-input">
+        <p th:errors="*{password}" class="error"></p>
+
+        <label for="passwordCheck" class="join-label">비밀번호 확인</label>
+        <input type="password" th:field="*{passwordCheck}" id="passwordCheck" class="join-input">
+        <p th:errors="*{passwordCheck}" class="error"></p>
+
         <label for="zipcode" class="join-label">우편번호</label>
         <input type="text" th:field="*{zipcode}" id="zipcode" class="join-input">
+        <p th:errors="*{zipcode}" class="error"></p>
+
         <label for="city" class="join-label">시,군</label>
         <input type="text" th:field="*{city}" id="city" class="join-input">
+        <p th:errors="*{city}" class="error"></p>
+
         <label for="detailAddress" class="join-label">세부 주소</label>
         <input type="text" th:field="*{detailAddress}" id="detailAddress" class="join-input">
+        <p th:errors="*{detailAddress}" class="error"></p>
+
         <button type="submit" class="join-button">회원가입</button>
         <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
     </form>
