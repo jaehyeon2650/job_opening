@@ -29,6 +29,21 @@
         <input type="password" th:field="*{passwordCheck}" id="passwordCheck" class="join-input">
         <p th:errors="*{passwordCheck}" class="error"></p>
 
+        <label for="firstPhone" class="join-label">핸드폰 번호</label>
+        <div class="phone-input-group">
+            <input type="number" th:field="*{firstPhone}" id="firstPhone" class="phone-input" placeholder="010" maxlength="3" />
+            <span class="phone-dash">-</span>
+            <input type="number" th:field="*{secondPhone}" id="secondPhone" class="phone-input" maxlength="4" />
+            <span class="phone-dash">-</span>
+            <input type="number" th:field="*{thirdPhone}" id="thirdPhone" class="phone-input" maxlength="4" />
+        </div>
+        <p th:errors="*{firstPhone}" class="error"></p>
+
+
+        <label for="email" class="join-label">이메일</label>
+        <input type="email" th:field="*{email}" id="email" class="join-input">
+        <p th:errors="*{email}" class="error"></p>
+
         <label for="zipcode" class="join-label">우편번호</label>
         <input type="text" th:field="*{zipcode}" id="zipcode" class="join-input">
         <p th:errors="*{zipcode}" class="error"></p>
