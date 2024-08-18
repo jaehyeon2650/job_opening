@@ -39,7 +39,7 @@ body {
 .join-input {
     width: 100%;
     padding: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 5px;
     border: 1px solid #cccccc;
     border-radius: 5px;
     box-sizing: border-box;
@@ -61,6 +61,7 @@ body {
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .home-button {
@@ -81,5 +82,6 @@ body {
 
 .error {
     color: red;
-    margin-bottom: 1rem;
+    margin-bottom: 3px;
+    font-size: 10px;
 }
