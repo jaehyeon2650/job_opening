@@ -1,8 +1,7 @@
 package project.general_project.web.join;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -15,7 +14,12 @@ public class JoinForm {
     @NotBlank
     private String password;
     private String passwordCheck;
-    @NotBlank
+
+    private String firstPhone;
+    private String SecondPhone;
+    private String ThirdPhone;
+    @Email
+    private String email;
     @Length(min = 6)
     private String zipcode;
     @NotBlank

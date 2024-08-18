@@ -38,10 +38,11 @@ public class MemberController {
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, @Login Member member) {
-        if(member!=null){
+        if (member != null) {
             return "redirect:/loginHome";
         }
-
+        return "login";
+    }
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURI){
@@ -73,7 +74,8 @@ public class MemberController {
             return "join";
         }
         Address address=Address.createAddress(joinForm.getZipcode(),joinForm.getCity(),joinForm.getDetailAddress());
-        Member member=Member.createMember(joinForm.getUsername(),joinForm.getUserId(),joinForm.getPassword(),address);
+        String number= joinForm.getFirstPhone()+joinForm.getSecondPhone()+joinForm.getThirdPhone();
+        Member member=Member.createMember(joinForm.getUsername(),joinForm.getUserId(),joinForm.getPassword(),number,joinForm.getEmail(),address);
         Long save = memberService.save(member);
         if(save==-1){
             bindingResult.reject("duplicateId");
