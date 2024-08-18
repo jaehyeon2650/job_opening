@@ -34,7 +34,10 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult) {
+    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, @Login Member member) {
+        if(member!=null){
+            return "redirect:/loginHome";
+        }
         return "login";
     }
 
