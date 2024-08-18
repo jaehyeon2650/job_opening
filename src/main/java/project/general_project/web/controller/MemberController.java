@@ -42,7 +42,11 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult){
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "login";
+        }
+
         Member loginMember = loginService.login(loginForm.getId(), loginForm.getPassword());
         if(loginMember==null){
             bindingResult.reject("loginFail","아이디 혹은 비밀번호가 잘못되었습니다.");
