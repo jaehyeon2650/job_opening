@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div th:object="${member}">
+    <p th:text="|안녕하세요! *{username}님|"></p>
+</div>
+<button th:onclick="|location.href='@{/logout}'|" type="button">로그아웃</button>
+</body>
+</html>
