@@ -29,8 +29,8 @@ class LoginServiceTest {
     @Test
     public void 로그인_성공() throws Exception{
         //given
-        Member member1=Member.createMember("asd","asd","asd", Address.createAddress("asd","asd","asda"));
-        Member member2=Member.createMember("asd","asdasd","asd", Address.createAddress("asd","asd","asda"));
+        Member member1=Member.createMember("asd","asd","asd","01026501404","ind07152@naver.com", Address.createAddress("asd","asd","asda"));
+        Member member2=Member.createMember("asd","asdasd","asd","01026501404","ind07152@naver.com", Address.createAddress("asd","asd","asda"));
         memberService.save(member1);
         memberService.save(member2);
         //when
@@ -43,8 +43,8 @@ class LoginServiceTest {
     @Test
     public void 로그인_실패_비밀번호_x() throws Exception{
         //given
-        Member member1=Member.createMember("asd","asd","asd", Address.createAddress("asd","asd","asda"));
-        Member member2=Member.createMember("asd","asdasd","asd", Address.createAddress("asd","asd","asda"));
+        Member member1=Member.createMember("asd","asd","asd","01026501404","ind07152@naver.com", Address.createAddress("asd","asd","asda"));
+        Member member2=Member.createMember("asd","asdasd","asd","01026501404","ind07152@naver.com", Address.createAddress("asd","asd","asda"));
         memberService.save(member1);
         memberService.save(member2);
         //when
@@ -56,8 +56,8 @@ class LoginServiceTest {
     @Test
     public void 로그인_실패_아이디_x() throws Exception{
         //given
-        Member member1=Member.createMember("asd","asd","asd", Address.createAddress("asd","asd","asda"));
-        Member member2=Member.createMember("asd","asdasd","asd", Address.createAddress("asd","asd","asda"));
+        Member member1=Member.createMember("asd","asd","asd","01026501404","ind07152@naver.com", Address.createAddress("asd","asd","asda"));
+        Member member2=Member.createMember("asd","asdasd","asd","01026501404","ind07152@naver.com", Address.createAddress("asd","asd","asda"));
         memberService.save(member1);
         memberService.save(member2);
         //when

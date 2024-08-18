@@ -38,10 +38,10 @@ class MemberServiceTest {
     @Test
     public void 같은_아이디() throws Exception{
         //given
-        Member member1=Member.createMember("asd","asd","asd",Address.createAddress("asd","asd","asda"));
+        Member member1=Member.createMember("asd","asd","asd","01026501404","ind07152@naver.com",Address.createAddress("asd","asd","asda"));
         memberService.save(member1);
         //when
-        Member member2=Member.createMember("asd","asd","asd",Address.createAddress("asd","asd","asda"));
+        Member member2=Member.createMember("asd","asd","asd","01026501404","ind07152@naver.com",Address.createAddress("asd","asd","asda"));
         Long saveId = memberService.save(member2);
         //then
         assertThat(saveId).isEqualTo(-1L);
@@ -51,7 +51,7 @@ class MemberServiceTest {
     public void 비밀번호_해쉬() throws Exception{
         //given
         PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-        Member member1=Member.createMember("asd","asd","asd",Address.createAddress("asd","asd","asda"));
+        Member member1=Member.createMember("asd","asd","asd","01026501404","ind07152@naver.com",Address.createAddress("asd","asd","asda"));
         memberService.save(member1);
         //when
         Member findMember = memberService.findById(member1.getId());
