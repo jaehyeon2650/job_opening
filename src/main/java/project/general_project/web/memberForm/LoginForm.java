@@ -1,4 +1,4 @@
-package project.general_project.web.login;
+package project.general_project.web.memberForm;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

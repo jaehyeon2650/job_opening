@@ -1,4 +1,4 @@
-package project.general_project.web.join;
+package project.general_project.web.memberForm;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
