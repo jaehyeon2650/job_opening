@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import project.general_project.web.join.JoinForm;
+import project.general_project.web.memberForm.JoinForm;
 
 @Component
 @RequiredArgsConstructor
