@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link th:href="@{/css/join.css}"
+          href="../static/css/join.css" rel="stylesheet">
+</head>
+<body>
+<div class="join-container">
+    <form th:action th:method="post" th:object="${editForm}" class="join-form">
+        <h2 class="join-title">회원수정</h2>
+        <div th:if="${#fields.hasGlobalErrors()}" class="error">
+            <p th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
+        </div>
+        <label for="username" class="join-label">이름</label>
+        <input type="text" th:field="*{username}" id="username" class="join-input" />
+        <p th:errors="*{username}" class="error"></p>
+
+        <label for="firstPhone" class="join-label">핸드폰 번호</label>
+        <div class="phone-input-group">
+            <input type="number" th:field="*{firstPhone}" id="firstPhone" class="phone-input" placeholder="010" maxlength="3" />
+            <span class="phone-dash">-</span>
+            <input type="number" th:field="*{secondPhone}" id="secondPhone" class="phone-input" maxlength="4" />
+            <span class="phone-dash">-</span>
+            <input type="number" th:field="*{thirdPhone}" id="thirdPhone" class="phone-input" maxlength="4" />
+        </div>
+        <p th:errors="*{firstPhone}" class="error"></p>
+
+        <label for="email" class="join-label">이메일</label>
+        <input type="email" th:field="*{email}" id="email" class="join-input">
+        <p th:errors="*{email}" class="error"></p>
+
+        <label for="zipcode" class="join-label">우편번호</label>
+        <input type="text" th:field="*{zipcode}" id="zipcode" class="join-input">
+        <p th:errors="*{zipcode}" class="error"></p>
+
+        <label for="city" class="join-label">시,군</label>
+        <input type="text" th:field="*{city}" id="city" class="join-input">
+        <p th:errors="*{city}" class="error"></p>
+
+        <label for="detailAddress" class="join-label">세부 주소</label>
+        <input type="text" th:field="*{detailAddress}" id="detailAddress" class="join-input">
+        <p th:errors="*{detailAddress}" class="error"></p>
+
+        <button type="submit" class="join-button">회원수정</button>
+        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    </form>
+</div>
+</body>
+</html>
