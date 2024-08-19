@@ -8,5 +8,6 @@
     <p th:text="|안녕하세요! *{username}님|"></p>
 </div>
 <button th:onclick="|location.href='@{/logout}'|" type="button">로그아웃</button>
+<button th:onclick="|location.href='@{/{id}/edit (id=${member.id})}'|">회원 수정</button>
 </body>
 </html>

@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import project.general_project.domain.Member;
 import project.general_project.web.SessionConst;
-import project.general_project.web.login.Login;
+import project.general_project.web.memberForm.Login;
 
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     @Override

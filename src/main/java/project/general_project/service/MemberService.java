@@ -31,4 +31,14 @@ public class MemberService {
     public Member findById(Long id) {
         return repository.findById(id);
     }
+
+    @Transactional
+    public Long updateMember(Member member){
+        Member findMember = repository.findById(member.getId());
+        findMember.setUsername(member.getUsername());
+        findMember.setPhone(member.getPhone());
+        findMember.setAddress(member.getAddress());
+        findMember.setEmail(member.getEmail());
+        return findMember.getId();
+    }
 }
