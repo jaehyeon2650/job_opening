@@ -2,9 +2,10 @@ package project.general_project.validation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import project.general_project.web.join.JoinForm;
+import project.general_project.web.memberForm.JoinForm;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +25,9 @@ public class JoinValidator implements Validator {
         }
         if(!joinForm.getPassword().equals(joinForm.getPasswordCheck())){
             errors.rejectValue("passwordCheck","passCheck");
+        }
+        if(!StringUtils.hasText(joinForm.getFirstPhone())||!StringUtils.hasText(joinForm.getSecondPhone())||!StringUtils.hasText(joinForm.getThirdPhone())){
+            errors.rejectValue("firstPhone","phoneCheck");
         }
     }
 }
