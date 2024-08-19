@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -13,13 +14,15 @@ import project.general_project.domain.Address;
 import project.general_project.domain.Member;
 import project.general_project.service.LoginService;
 import project.general_project.service.MemberService;
+import project.general_project.validation.EditValidator;
 import project.general_project.validation.JoinValidator;
 
 import project.general_project.web.SessionConst;
-import project.general_project.web.join.JoinForm;
-import project.general_project.web.login.Login;
+import project.general_project.web.memberForm.EditForm;
+import project.general_project.web.memberForm.JoinForm;
+import project.general_project.web.memberForm.Login;
 
-import project.general_project.web.login.LoginForm;
+import project.general_project.web.memberForm.LoginForm;
 
 @Slf4j
 @Controller
@@ -29,13 +32,17 @@ public class MemberController {
     private final MemberService memberService;
     private final LoginService loginService;
     private final JoinValidator joinValidator;
+    private final EditValidator editValidator;
 
     @InitBinder("joinForm")
     public void init(WebDataBinder dataBinder){
         dataBinder.addValidators(joinValidator);
     }
 
-
+    @InitBinder("editForm")
+    public void init2(WebDataBinder dataBinder){
+        dataBinder.addValidators(editValidator);
+    }
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, @Login Member member) {
         if (member != null) {
@@ -90,6 +97,29 @@ public class MemberController {
             session.invalidate();
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String memberEditForm(@PathVariable("id") Long memerId, Model model){
+        Member findMember = memberService.findById(memerId);
+        EditForm editForm=new EditForm(findMember);
+        model.addAttribute("editForm",editForm);
+        return "updateMemberForm";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String editMember(@Validated @ModelAttribute("editForm") EditForm editForm,BindingResult bindingResult,@PathVariable("id") Long memerId,Model model){
+        if(bindingResult.hasErrors()){
+            log.info("error");
+            return "updateMemberForm";
+        }
+        Address address=Address.createAddress(editForm.getZipcode(),editForm.getCity(),editForm.getDetailAddress());
+        String number= editForm.getFirstPhone()+editForm.getSecondPhone()+editForm.getThirdPhone();
+        Member member=Member.createMember(editForm.getId(),editForm.getUsername(),number,editForm.getEmail(),address);
+        Long memberId = memberService.updateMember(member);
+        Member findMember = memberService.findById(memberId);
+        model.addAttribute("member",findMember);
+        return "redirect:/loginHome";
     }
 
 }
