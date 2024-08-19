@@ -32,6 +32,11 @@ public class Member {
         Member member=new Member(username,userId,password,phone,email,address);
         return member;
     }
+    public static Member createMember(Long memberId,String username,String phone,String email, Address address){
+        Member member=new Member(username,null,null,phone,email,address);
+        member.setId(memberId);
+        return member;
+    }
     public Member() {
 
     }
