@@ -60,4 +60,17 @@ class MemberServiceTest {
         assertThat(password).isTrue();
     }
 
+    @Test
+    public void 회원_수정() throws Exception{
+        //given
+        PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+        Member member1=Member.createMember("asd","asd","asd","01026501404","ind07152@naver.com",Address.createAddress("asd","asd","asda"));
+        memberService.save(member1);
+        //when
+        member1.setPhone("01012341234");
+        memberService.updateMember(member1);
+        //then
+        Member findMember = memberService.findById(member1.getId());
+        assertThat(findMember).isEqualTo(member1);
+    }
 }
