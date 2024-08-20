@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f9f9f9;
+}
+
+.post-container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-form {
+    width: 80%;
+}
+
+.post-title {
+    font-size: 24px;
+    margin-bottom: 1rem;
+    color: #000000;
+}
+
+.post-label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    color: #3A3A3A;
+}
+
+.post-input, .post-textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #3A3A3A;
+}
+
+.post-input:focus, .post-textarea:focus {
+    border-color: #6666ff;
+    outline: none;
+}
+
+.post-textarea {
+    height: 300px;
+    resize: vertical;
+}
+
+.post-button, .home-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.post-button:hover, .home-button:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    margin-bottom: 3px;
+    font-size: 10px;
+}
+
+.post-meta {
+    margin-top: 1rem;
+    text-align: left;
+    width: 100%;
+}
+
+.post-writer, .post-date, .post-recruitment {
+    font-size: 14px;
+    color: #555555;
+    margin-bottom: 0.5rem;
+}
+
+.post-writer strong, .post-date strong {
+    color: #333333;
+}
+
+.post-status {
+    margin-top: 1.5rem;
+    text-align: left;
+    width: 100%;
+}
+
+.status-label {
+    font-size: 16px;
+    color: #3A3A3A;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.status-options {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.status-radio {
+    margin-right: 0.5rem;
+}
+
+.status-description {
+    margin-right: 1.5rem;
+    font-size: 14px;
+    color: #555555;
+    cursor: pointer;
+}
