@@ -16,9 +16,9 @@ import project.general_project.domain.Post;
 import project.general_project.domain.RecruitmentStatus;
 import project.general_project.service.MemberService;
 import project.general_project.service.PostService;
-import project.general_project.web.memberForm.Login;
-import project.general_project.web.postForm.EditPostForm;
-import project.general_project.web.postForm.PostForm;
+import project.general_project.web.form.memberForm.Login;
+import project.general_project.web.form.postForm.EditPostForm;
+import project.general_project.web.form.postForm.PostForm;
 
 import java.util.List;
 import java.util.Optional;

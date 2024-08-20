@@ -9,7 +9,7 @@ import project.general_project.domain.Member;
 import project.general_project.domain.Post;
 import project.general_project.service.PostService;
 import project.general_project.web.SessionConst;
-import project.general_project.web.postForm.PostForm;
+import project.general_project.web.form.postForm.PostForm;
 
 import java.util.List;
 import java.util.stream.Collectors;

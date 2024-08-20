@@ -1,4 +1,4 @@
-package project.general_project.web.postForm;
+package project.general_project.web.form.postForm;
 
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;

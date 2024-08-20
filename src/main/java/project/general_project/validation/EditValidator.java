@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import project.general_project.web.memberForm.EditForm;
+import project.general_project.web.form.memberForm.EditForm;
 
 @Component
 public class EditValidator implements Validator {
