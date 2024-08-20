@@ -7,7 +7,16 @@
 <div th:object="${member}">
     <p th:text="|안녕하세요! *{username}님|"></p>
 </div>
+<div>
+    <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|">
+        <div th:text="${postForm.title}">제목</div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|"></div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|"></div>
+        <div th:text="${postForm.content}">내용</div>
+    </div>
+</div>
 <button th:onclick="|location.href='@{/logout}'|" type="button">로그아웃</button>
 <button th:onclick="|location.href='@{/{id}/edit (id=${member.id})}'|">회원 수정</button>
+<button th:onclick="|location.href='@{/{id}/post/new (id=${member.id})}'|">게시글 작성</button>
 </body>
 </html>
