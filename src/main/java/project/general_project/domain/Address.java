@@ -1,9 +1,9 @@
 package project.general_project.domain;
 
 import jakarta.persistence.Embeddable;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Embeddable
 public class Address {
     private String zipcode; //우편번호
