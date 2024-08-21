@@ -3,6 +3,7 @@ package project.general_project.repository.post;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Comment;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class PostRepositoryTest {
     @Autowired
     EntityManager em;
@@ -94,5 +96,139 @@ class PostRepositoryTest {
         List<Post> posts = postRepository.getPosts(0, 10);
         //then
         assertThat(posts.size()).isEqualTo(8);
+    }
+
+    @Test
+    public void 포스트_찾기() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setTitle("aabbcc");
+        post1.setContent("aaccbbbb");
+        postRepository.save(post1);
+        Post post2=new Post();
+        post2.setTitle("spring");
+        post2.setContent("spring123123");
+        postRepository.save(post2);
+        //when
+        List<Post> findPosts = postRepository.getPostsByTitle("spri",0,10);
+
+        //then
+        assertThat(findPosts.size()).isEqualTo(1);
+    }
+    @Test
+    public void 포스트_찾기_대소문자구별() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setTitle("aabbcc");
+        post1.setContent("aaccbbbb");
+        postRepository.save(post1);
+        Post post2=new Post();
+        post2.setTitle("Spring");
+        post2.setContent("spring123123");
+        postRepository.save(post2);
+        //when
+        List<Post> findPosts = postRepository.getPostsByTitle("spri",0,10);
+        //then
+        assertThat(findPosts.size()).isEqualTo(1);
+    }
+    @Test
+    public void 포스트_찾기_대소문자구별2() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setTitle("aabbcc");
+        post1.setContent("aaccbbbb");
+        postRepository.save(post1);
+        Post post2=new Post();
+        post2.setTitle("Spring");
+        post2.setContent("spring123123");
+        postRepository.save(post2);
+        //when
+        List<Post> findPosts = postRepository.getPostsByTitle("SPRI",0,10);
+        //then
+        assertThat(findPosts.size()).isEqualTo(1);
+    }
+    @Test
+    public void 포스트_찾기_대소문자구별3() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setTitle("aabbcc");
+        post1.setContent("aaccbbbb");
+        postRepository.save(post1);
+        Post post2=new Post();
+        post2.setTitle("Spring");
+        post2.setContent("spring123123");
+        postRepository.save(post2);
+        for(int i=0;i<40;i++){
+            Post post=new Post();
+            post.setTitle("asdas"+i);
+            postRepository.save(post);
+        }
+        //when
+        List<Post> findPosts = postRepository.getPostsByTitle("Da",0,10);
+        //then
+        assertThat(findPosts.size()).isEqualTo(10);
+    }
+    @Test
+    public void 빈_문자열로_모든_포스트_찾기() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setTitle("aabbcc");
+        post1.setContent("aaccbbbb");
+        postRepository.save(post1);
+        Post post2=new Post();
+        post2.setTitle("Spring");
+        post2.setContent("spring123123");
+        postRepository.save(post2);
+        for(int i=0;i<40;i++){
+            Post post=new Post();
+            post.setTitle("asdas"+i);
+            postRepository.save(post);
+        }
+        //when
+        List<Post> findPosts = postRepository.getPostsByTitle("",0,10);
+        //then
+        assertThat(findPosts.size()).isEqualTo(10);
+    }
+    @Test
+    public void 널로_모든_포스트_찾기() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setTitle("aabbcc");
+        post1.setContent("aaccbbbb");
+        postRepository.save(post1);
+        Post post2=new Post();
+        post2.setTitle("Spring");
+        post2.setContent("spring123123");
+        postRepository.save(post2);
+        for(int i=0;i<40;i++){
+            Post post=new Post();
+            post.setTitle("asdas"+i);
+            postRepository.save(post);
+        }
+        //when
+        List<Post> findPosts = postRepository.getPostsByTitle(null,0,10);
+        //then
+        assertThat(findPosts.size()).isEqualTo(10);
+    }
+    @Test
+    public void 총_포스트_개수() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setTitle("aabbcc");
+        post1.setContent("aaccbbbb");
+        postRepository.save(post1);
+        Post post2=new Post();
+        post2.setTitle("Spring");
+        post2.setContent("spring123123");
+        postRepository.save(post2);
+        for(int i=0;i<40;i++){
+            Post post=new Post();
+            post.setTitle("asdas"+i);
+            postRepository.save(post);
+        }
+        //when
+        Long postCount = postRepository.getPostCount();
+        //then
+        assertThat(postCount).isEqualTo(42);
     }
 }
