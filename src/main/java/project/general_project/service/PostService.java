@@ -46,4 +46,11 @@ public class PostService {
     public List<Post> findPosts(int start,int count){
         return repository.getPosts(start,count);
     }
+
+    public List<Post> findPostsByTitle(String content,int start,int count){
+        return repository.getPostsByTitle(content,start,count);
+    }
+    public Long getPostCount(){
+        return repository.getPostCount();
+    }
 }
