@@ -60,6 +60,12 @@ public class PostRepository {
                 .fetch();
     }
 
+    public Long getPostCount(){
+        List<Long> fetch = query.select(post.count()).from(post).fetch();
+        Long count = fetch.get(0);
+        return count;
+    }
+
     private BooleanExpression titleLike(String content){
         return content != null? stringTemplate("lower({0})",post.title).like("%"+content.toLowerCase()+"%"):null;
     }
