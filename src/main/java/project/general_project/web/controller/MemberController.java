@@ -18,11 +18,11 @@ import project.general_project.validation.EditValidator;
 import project.general_project.validation.JoinValidator;
 
 import project.general_project.web.SessionConst;
-import project.general_project.web.memberForm.EditForm;
-import project.general_project.web.memberForm.JoinForm;
-import project.general_project.web.memberForm.Login;
+import project.general_project.web.form.memberForm.EditForm;
+import project.general_project.web.form.memberForm.JoinForm;
+import project.general_project.web.form.memberForm.Login;
 
-import project.general_project.web.memberForm.LoginForm;
+import project.general_project.web.form.memberForm.LoginForm;
 
 @Slf4j
 @Controller
