@@ -23,8 +23,7 @@
             <p class="post-date"><strong>작성일:</strong> <span th:text="${#temporals.format(postForm.create, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
             <p class="post-recruitment"><strong>현재 모집 상태:</strong> <span th:text="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}?'모집 종료':'모집 중'">모집 상태</span></p>
         </div>
-
-
+      
         <button th:if="${isWriter}" th:onclick="|location.href='@{/post/{postId}/edit (postId=${postForm.postId})}'|" type="button" class="home-button">수정하기</button>
         <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
     </form>
