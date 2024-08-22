@@ -3,9 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link th:href="@{/css/home.css}" href="../static/css/home.css" rel="stylesheet">
 </head>
 <body>
-<button th:onclick="|location.href='@{/join}'|" type="button">회원가입</button>
-<button th:onclick="|location.href='@{/login}'|" type="button">로그인</button>
+<header class="header home_header">
+    <div class="header-buttons">
+        <button th:onclick="|location.href='@{/join}'|" type="button" class="btn">회원가입</button>
+        <button th:onclick="|location.href='@{/login}'|" type="button" class="btn">로그인</button>
+    </div>
+</header>
+<div class="search-container">
+    <form th:object="${postSearchForm}" method="get" class="search-form">
+        <input type="text" th:field="*{content}" id="content" class="search-input">
+        <button type="submit" class="search-button">검색</button>
+    </form>
+</div>
+<main class="container">
+    <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|" class="post-card">
+        <div th:text="${postForm.title}" class="post-title">제목</div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|" class="post-status closed"></div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|" class="post-status open"></div>
+        <div th:text="${postForm.content}" class="post-content">내용</div>
+    </div>
+</main>
+<div class="pagination">
+    <button th:if="${currentPage}>10" th:onclick="|location.href='@{/?page=1}'|" th:text="1"></button>
+    <button th:if="${currentPage}>10" th:onclick="|location.href='@{/?page={page} (page=${currentPage-10})}'|" th:text="..."></button>
+    <button th:each="i : ${#numbers.sequence((((currentPage - 1)/10)*10+1),(((currentPage - 1)/10)*10+1)+scope)}" th:onclick="|location.href='@{/?page={page} (page=${i})}'|" th:text="${i}"></button>
+    <button th:if="${(((currentPage - 1)/10)*10+1)+scope<count}" th:onclick="|location.href='@{/?page={page} (page=${(((currentPage - 1)/10)*10+1)+scope+1})}'|" th:text="..."></button>
+</div>
 </body>
 </html>
