@@ -46,7 +46,7 @@ class PostServiceTest {
         service.save(post2);
         //when
         service.saveComment(post1.getId(),comment1);
-        Comment findComment = repository.findCommentById(comment1.getCommentId());
+        Comment findComment = repository.findCommentById(comment1.getId());
         //then
         assertThat(findComment).isEqualTo(comment1);
         assertThat(findComment.getPost()).isEqualTo(post1);
