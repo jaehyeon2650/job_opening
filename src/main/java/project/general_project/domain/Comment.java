@@ -4,12 +4,16 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
 public class Comment {
+
     @Id @GeneratedValue
-    private Long commentId;
+    private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -18,6 +22,12 @@ public class Comment {
     @JoinColumn(name="post_id")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent",orphanRemoval = true)
+    private List<Comment> comments= new ArrayList<>();
     @Lob
     private String content;
 

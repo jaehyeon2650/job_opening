@@ -47,7 +47,7 @@ class PostRepositoryTest {
         postRepository.save(post1);
         postRepository.save(post2);
         //when
-        Comment findComment = postRepository.findCommentById(comment1.getCommentId());
+        Comment findComment = postRepository.findCommentById(comment1.getId());
         //then
         assertThat(findComment).isEqualTo(comment1);
         assertThat(findComment.getPost()).isEqualTo(post1);
