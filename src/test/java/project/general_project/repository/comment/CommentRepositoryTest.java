@@ -1,20 +1,23 @@
 package project.general_project.repository.comment;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Comment;
+import project.general_project.domain.Member;
 import project.general_project.domain.Post;
+import project.general_project.repository.member.MemberRepository;
 import project.general_project.repository.post.PostRepository;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-
+@Slf4j
 @SpringBootTest
 @Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
@@ -23,6 +26,8 @@ class CommentRepositoryTest {
     CommentRepository repository;
     @Autowired
     PostRepository postRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     public void 댓글_추가() throws Exception{
@@ -54,6 +59,15 @@ class CommentRepositoryTest {
         Post post2=new Post();
         postRepository.save(post1);
         postRepository.save(post2);
+
+        Member member=new Member();
+        memberRepository.save(member);
+
+        comment1.setMember(member);
+        comment2.setMember(member);
+        comment3.setMember(member);
+        comment4.setMember(member);
+        comment5.setMember(member);
 
         comment1.setPost(post1);
         comment2.setPost(post1);
@@ -124,6 +138,15 @@ class CommentRepositoryTest {
         postRepository.save(post2);
         postRepository.save(post3);
 
+        Member member=new Member();
+        memberRepository.save(member);
+
+        comment1.setMember(member);
+        comment2.setMember(member);
+        comment3.setMember(member);
+        comment4.setMember(member);
+        comment5.setMember(member);
+
         comment1.setPost(post1);
         comment2.setPost(post1);
         comment3.setPost(post2);
@@ -153,6 +176,14 @@ class CommentRepositoryTest {
         Comment comment3=new Comment();
         Comment comment4=new Comment();
         Comment comment5=new Comment();
+        Member member=new Member();
+        memberRepository.save(member);
+
+        comment1.setMember(member);
+        comment2.setMember(member);
+        comment3.setMember(member);
+        comment4.setMember(member);
+        comment5.setMember(member);
 
         comment1.addComment(comment2);
         comment1.addComment(comment3);
@@ -160,6 +191,7 @@ class CommentRepositoryTest {
 
         repository.save(comment1);
         repository.save(comment4);
+        Comment byId = repository.findById(comment3.getId());
         //when
         List<Comment> commentByParentId = repository.findCommentByParentId(comment1.getId());
         //then
@@ -174,6 +206,14 @@ class CommentRepositoryTest {
         Comment comment3=new Comment();
         Comment comment4=new Comment();
         Comment comment5=new Comment();
+        Member member=new Member();
+        memberRepository.save(member);
+
+        comment1.setMember(member);
+        comment2.setMember(member);
+        comment3.setMember(member);
+        comment4.setMember(member);
+        comment5.setMember(member);
 
         comment1.addComment(comment2);
         comment1.addComment(comment3);
@@ -198,14 +238,17 @@ class CommentRepositoryTest {
         Comment comment4=new Comment();
         Comment comment5=new Comment();
 
+        Post post=new Post();
+        postRepository.save(post);
+        comment1.setPost(post);
         comment1.addComment(comment2);
         comment1.addComment(comment3);
         comment4.addComment(comment5);
         repository.save(comment1);
         repository.save(comment4);
         //when
-        Long mainCommentCount = repository.getMainCommentCount();
+        Long mainCommentCount = repository.getMainCommentCount(post.getId());
         //then
-        assertThat(mainCommentCount).isEqualTo(2);
+        assertThat(mainCommentCount).isEqualTo(1);
     }
 }

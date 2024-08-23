@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Comment;
+import project.general_project.domain.Member;
 import project.general_project.domain.Post;
 
 import java.util.List;
@@ -20,6 +21,8 @@ class CommentServiceTest {
     CommentService service;
     @Autowired
     PostService postService;
+    @Autowired
+    MemberService memberService;
 
     @Test
     public void 포스트에_댓글_저장() throws Exception{
@@ -29,6 +32,15 @@ class CommentServiceTest {
         Comment comment1=Comment.createComment(null,"adsd",post);
         Comment comment2=Comment.createComment(null,"adsd",post);
         Comment comment3=Comment.createComment(null,"adsd",post);
+
+        Member member=new Member();
+        member.setPassword("asda");
+        memberService.save(member);
+
+        comment1.setMember(member);
+        comment2.setMember(member);
+        comment3.setMember(member);
+
 
         service.saveInPost(comment1);
         service.saveInPost(comment2);
@@ -47,6 +59,15 @@ class CommentServiceTest {
         Comment comment2=new Comment();
         Comment comment3=new Comment();
         Comment comment4=new Comment();
+
+        Member member=new Member();
+        member.setPassword("asdsa");
+        memberService.save(member);
+
+        comment1.setMember(member);
+        comment2.setMember(member);
+        comment3.setMember(member);
+        comment4.setMember(member);
 
         service.saveInPost(comment1);
         service.saveInPost(comment2);
