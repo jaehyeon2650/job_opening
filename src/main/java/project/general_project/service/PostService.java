@@ -29,10 +29,6 @@ public class PostService {
     public Optional<Post> findByIdWithMember(Long postId){
         return Optional.of(repository.findByIdWithMember(postId));
     }
-    @Transactional
-    public void saveComment(Long postId, Comment comment){
-        repository.saveComment(postId,comment);
-    }
 
     @Transactional
     public Long updatePost(Post post){

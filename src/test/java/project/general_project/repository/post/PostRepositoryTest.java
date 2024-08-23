@@ -37,40 +37,7 @@ class PostRepositoryTest {
         assertThat(findPost).isEqualTo(post);
     }
 
-    @Test
-    public void 댓글_저장() throws Exception{
-        //given
-        Post post1=new Post();
-        Post post2=new Post();
-        Comment comment1=new Comment();
-        post1.addComment(comment1);
-        postRepository.save(post1);
-        postRepository.save(post2);
-        //when
-        Comment findComment = postRepository.findCommentById(comment1.getCommentId());
-        //then
-        assertThat(findComment).isEqualTo(comment1);
-        assertThat(findComment.getPost()).isEqualTo(post1);
-    }
 
-    @Test
-    public void 댓글_저장_2() throws Exception{
-        //given
-        Post post1=new Post();
-        Post post2=new Post();
-        Comment comment1=new Comment();
-        Comment comment2=new Comment();
-        post1.addComment(comment1);
-        post1.addComment(comment2);
-        postRepository.save(post1);
-        postRepository.save(post2);
-        //when
-        Post post1Find = postRepository.findById(post1.getId());
-        Post post2Find = postRepository.findById(post2.getId());
-        //then
-        assertThat(post1Find.getComments().size()).isEqualTo(2);
-        assertThat(post2Find.getComments().size()).isEqualTo(0);
-    }
 
     @Test
     public void 페이징() throws Exception{

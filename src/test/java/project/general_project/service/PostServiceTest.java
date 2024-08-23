@@ -35,40 +35,4 @@ class PostServiceTest {
         assertThat(findPost.get()).isEqualTo(post);
     }
 
-    @Test
-    public void 댓글_저장() throws Exception{
-        //given
-        Post post1=new Post();
-        Post post2=new Post();
-        Comment comment1=new Comment();
-
-        service.save(post1);
-        service.save(post2);
-        //when
-        service.saveComment(post1.getId(),comment1);
-        Comment findComment = repository.findCommentById(comment1.getCommentId());
-        //then
-        assertThat(findComment).isEqualTo(comment1);
-        assertThat(findComment.getPost()).isEqualTo(post1);
-    }
-
-    @Test
-    public void 댓글_저장_2() throws Exception{
-        //given
-        Post post1=new Post();
-        Post post2=new Post();
-        Comment comment1=new Comment();
-        Comment comment2=new Comment();
-
-        service.save(post1);
-        service.save(post2);
-        //when
-        service.saveComment(post1.getId(),comment1);
-        service.saveComment(post1.getId(),comment2);
-        Post findPost1 = service.findById(post1.getId()).get();
-        Post findPost2 = service.findById(post2.getId()).get();
-        //then
-        assertThat(findPost1.getComments().size()).isEqualTo(2);
-        assertThat(findPost2.getComments().size()).isEqualTo(0);
-    }
 }

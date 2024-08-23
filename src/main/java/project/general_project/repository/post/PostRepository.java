@@ -33,11 +33,6 @@ public class PostRepository {
                 .setParameter("postId",postId)
                 .getSingleResult();
     }
-    public void saveComment(Long postId, Comment comment){
-        Post findPost = findById(postId);
-        findPost.addComment(comment);
-        em.persist(comment);
-    }
 
     public Comment findCommentById(Long commentId){
         return em.find(Comment.class,commentId);

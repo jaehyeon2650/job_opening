@@ -23,13 +23,6 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private RecruitmentStatus status;
 
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
-    private List<Comment> comments=new ArrayList<>();
-
-    public void addComment(Comment comment){
-        comments.add(comment);
-        comment.setPost(this);
-    }
 
     public static Post createPost(Member member,String title,String content){
         Post post=new Post();
