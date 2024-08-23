@@ -15,6 +15,7 @@ import project.general_project.domain.RecruitmentStatus;
 import project.general_project.service.CommentService;
 import project.general_project.service.MemberService;
 import project.general_project.service.PostService;
+import project.general_project.web.form.comment.CommentAddForm;
 import project.general_project.web.form.comment.CommentForm;
 import project.general_project.web.form.memberForm.Login;
 import project.general_project.web.form.postForm.EditPostForm;
@@ -66,9 +67,9 @@ public class PostController {
         PostForm postForm=new PostForm(post.getTitle(),post.getContent(),post.getStatus(),post.getId(),post.getMember().getUsername(),post.getCreated());
         model.addAttribute("postForm",postForm);
         addModelIsWriter(model, loginMember, post);
-        List<Comment> comments = commentService.findCommentByPost(post.getId(), 0, 10);
-        model.addAttribute("comments",comments);
-        model.addAttribute("commentForm",new CommentForm());
+        addCommentToModel(model,post.getId(),page);
+        addCommentCount(model,post.getId());
+        model.addAttribute("commentForm",new CommentAddForm());
         model.addAttribute("id",commentId);
         if(commentId!=-1){
             List<Comment> childComment = commentService.findCommentByParentId(commentId);
@@ -83,7 +84,7 @@ public class PostController {
         return "redirect:/post/{postId}";
     }
     @PostMapping("/post/{postId}/comments/new")
-    public String addComment(@Validated @ModelAttribute("commentForm") CommentForm form,BindingResult bindingResult, @PathVariable("postId") Long postId, Model model, @Login Member loginMember,RedirectAttributes redirectAttributes,@ModelAttribute PostForm postForm){
+    public String addComment(@Validated @ModelAttribute("commentForm") CommentAddForm form, BindingResult bindingResult, @PathVariable("postId") Long postId, Model model, @Login Member loginMember, RedirectAttributes redirectAttributes, @ModelAttribute PostForm postForm){
 
         redirectAttributes.addAttribute("postId",postId);
         if(loginMember==null){
@@ -106,7 +107,7 @@ public class PostController {
         return "redirect:/post/{postId}?comment={commentId}";
     }
     @PostMapping("/post/{postId}/comments/{commentId}/new")
-    public String addChildComment(@Validated @ModelAttribute("commentForm") CommentForm form,BindingResult bindingResult, @PathVariable Long postId,@PathVariable Long commentId, Model model, @Login Member loginMember,RedirectAttributes redirectAttributes,@ModelAttribute PostForm postForm){
+    public String addChildComment(@Validated @ModelAttribute("commentForm") CommentAddForm form, BindingResult bindingResult, @PathVariable Long postId, @PathVariable Long commentId, Model model, @Login Member loginMember, RedirectAttributes redirectAttributes, @ModelAttribute PostForm postForm){
 
         redirectAttributes.addAttribute("postId",postId);
         redirectAttributes.addAttribute("commentId",commentId);
