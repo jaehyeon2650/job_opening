@@ -5,13 +5,13 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import project.general_project.domain.Comment;
-import project.general_project.domain.QComment;
-import project.general_project.domain.QMember;
+
 
 import java.util.List;
 
 import static project.general_project.domain.QComment.*;
 import static project.general_project.domain.QMember.*;
+import static project.general_project.domain.QPost.*;
 
 @Repository
 public class CommentRepository {
@@ -41,15 +41,16 @@ public class CommentRepository {
     }
 
     public List<Comment> findCommentByParentId(Long parentId){
+
         return query.selectFrom(comment)
                 .join(comment.member,member).fetchJoin()
                 .where(comment.parent.id.eq(parentId))
                 .orderBy(comment.created.desc()).fetch();
     }
 
-    public Long getMainCommentCount(){
+    public Long getMainCommentCount(Long postId){
         List<Long> fetch = query.select(comment.count()).from(comment)
-                .where(comment.parent.isNull())
+                .where(comment.parent.isNull().and(post.id.eq(postId)))
                 .fetch();
         return fetch.get(0);
     }

@@ -34,4 +34,8 @@ public class CommentService {
     public List<Comment> findCommentByParentId(Long parentId){
         return repository.findCommentByParentId(parentId);
     }
+
+    public Long getMainCommentCount(Long postId){
+        return repository.getMainCommentCount(postId);
+    }
 }
