@@ -35,7 +35,7 @@
         </form>
         <div th:each="comment:${comments}" class="comment-item">
             <div class="comment-header">
-                <p class="comment-username" th:text="${comment.member.username}"></p>
+                <p class="comment-username" th:text="${comment.username}"></p>
                 <span class="comment-timestamp" th:text="${#temporals.format(comment.created, 'yyyy-MM-dd HH:mm')}"></span>
             </div>
             <div class="comment-content" th:utext="${#strings.replace(comment.content, '\n', '<br/>')}"></div>
@@ -58,7 +58,28 @@
             </div>
         </div>
     </div>
-        <button th:if="${isWriter}" th:onclick="|location.href='@{/post/{postId}/edit (postId=${postForm.postId})}'|" type="button" class="home-button">수정하기</button>
+    <div class="pagination">
+        <button th:if="${currentPage > 5}"
+                th:onclick="|location.href='@{/post/{postId}?page=1(postId=${postForm.postId})}'|">1</button>
+
+        <button th:if="${currentPage > 5}"
+                th:onclick="|location.href='@{/post/{postId}?page={page}(postId=${postForm.postId}, page=${((currentPage - 1) / 5) * 5})}'|">...</button>
+
+        <button th:each="i : ${#numbers.sequence(((currentPage - 1) / 5) * 5 + 1,
+                                             (totalPages > (((currentPage - 1) / 5) + 1) * 5) ? (((currentPage - 1) / 5) + 1) * 5 : totalPages)}"
+                th:onclick="|location.href='@{/post/{postId}?page={page}(postId=${postForm.postId}, page=${i})}'|"
+                th:text="${i}"
+                th:classappend="${currentPage == i} ? 'active' : ''"></button>
+
+        <button th:if="${totalPages > (((currentPage - 1) / 5) + 1) * 5}"
+                th:onclick="|location.href='@{/post/{postId}?page={page}(postId=${postForm.postId}, page=${(((currentPage - 1) / 5) + 1) * 5 + 1})}'|">...</button>
+
+        <button th:if="${totalPages > (((currentPage - 1) / 5) + 1) * 5}"
+                th:onclick="|location.href='@{/post/{postId}?page={totalPages}(postId=${postForm.postId}, page=${totalPages})}'|"
+                th:text="${totalPages}"></button>
+    </div>
+
+    <button th:if="${isWriter}" th:onclick="|location.href='@{/post/{postId}/edit (postId=${postForm.postId})}'|" type="button" class="home-button">수정하기</button>
         <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
 </div>
 </body>
