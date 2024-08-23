@@ -29,6 +29,7 @@ class MemberServiceTest {
         //given
         Member member=new Member();
         member.setUsername("asd");
+        member.setPassword("asdsa");
         //when
         memberService.save(member);
         //then

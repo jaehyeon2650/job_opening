@@ -27,10 +27,26 @@
     </div>
 </main>
 <div class="pagination">
-    <button th:if="${currentPage}>10" th:onclick="|location.href='@{/?page=1}'|" th:text="1"></button>
-    <button th:if="${currentPage}>10" th:onclick="|location.href='@{/?page={page} (page=${currentPage-10})}'|" th:text="..."></button>
-    <button th:each="i : ${#numbers.sequence((((currentPage - 1)/10)*10+1),(((currentPage - 1)/10)*10+1)+scope)}" th:onclick="|location.href='@{/?page={page} (page=${i})}'|" th:text="${i}"></button>
-    <button th:if="${(((currentPage - 1)/10)*10+1)+scope<count}" th:onclick="|location.href='@{/?page={page} (page=${(((currentPage - 1)/10)*10+1)+scope+1})}'|" th:text="..."></button>
+    <button th:if="${currentPage > 10}"
+            th:onclick="|location.href='@{/?page=1}'|">1</button>
+
+    <button th:if="${currentPage > 10}"
+            th:onclick="|location.href='@{/?page={page} (page=${((currentPage - 1) / 10) * 10})}'|">...</button>
+
+    <button th:each="i : ${#numbers.sequence(((currentPage - 1) / 10) * 10 + 1, (totalPages > (((currentPage - 1) / 10) + 1) * 10) ? (((currentPage - 1) / 10) + 1) * 10 : totalPages)}"
+            th:onclick="|location.href='@{/?page={page} (page=${i})}'|"
+            th:text="${i}"
+            th:classappend="${currentPage == i} ? 'active' : ''"></button>
+
+    <button th:if="${totalPages > (((currentPage - 1) / 10) + 1) * 10}"
+            th:onclick="|location.href='@{/?page={page} (page=${(((currentPage - 1) / 10) + 1) * 10 + 1})}'|">...</button>
+
+    <button th:if="${totalPages > (((currentPage - 1) / 10) + 1) * 10}"
+            th:onclick="|location.href='@{/?page={totalPages} (totalPages=${totalPages})}'|"
+            th:text="${totalPages}"></button>
 </div>
+
+
+
 </body>
 </html>

@@ -6,16 +6,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.general_project.domain.Comment;
 import project.general_project.domain.Member;
 import project.general_project.domain.Post;
 import project.general_project.domain.RecruitmentStatus;
+import project.general_project.service.CommentService;
 import project.general_project.service.MemberService;
 import project.general_project.service.PostService;
+import project.general_project.web.form.comment.CommentAddForm;
+import project.general_project.web.form.comment.CommentForm;
 import project.general_project.web.form.memberForm.Login;
 import project.general_project.web.form.postForm.EditPostForm;
 import project.general_project.web.form.postForm.PostForm;
@@ -28,8 +29,10 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 public class PostController {
+
     private final PostService postService;
     private final MemberService memberService;
+    private final CommentService commentService;
 
     @ModelAttribute("codes")
     public RecruitmentStatus[] codes(){
@@ -53,20 +56,94 @@ public class PostController {
         }
         Post post = Post.createPost(findMember, postForm.getTitle(), postForm.getContent());
         postService.save(post);
-        model.addAttribute("member",findMember);
-        addPostFormToModel(model);
-        return "loginHome";
+        return "redirect:/loginHome";
     }
 
     @GetMapping("/post/{id}")
-    public String postForm(@PathVariable("id") Long postId,Model model,@Login Member loginMember){
+    public String postForm(@PathVariable("id") Long postId, Model model, @Login Member loginMember, @RequestParam(name = "comment",defaultValue = "-1") Long commentId,@RequestParam(name = "page",defaultValue = "1") Integer page){
         Optional<Post> findPost = postService.findByIdWithMember(postId);
         if(!findPost.isPresent()) return "redirect:/";
         Post post = findPost.get();
         PostForm postForm=new PostForm(post.getTitle(),post.getContent(),post.getStatus(),post.getId(),post.getMember().getUsername(),post.getCreated());
         model.addAttribute("postForm",postForm);
         addModelIsWriter(model, loginMember, post);
+        addCommentToModel(model,post.getId(),page);
+        addCommentCount(model,post.getId());
+        model.addAttribute("commentForm",new CommentAddForm());
+        model.addAttribute("id",commentId);
+        if(commentId!=-1){
+            List<Comment> childComment = commentService.findCommentByParentId(commentId);
+            model.addAttribute("children",childComment);
+        }
         return "postForm";
+    }
+
+    private void addCommentToModel(Model model, Long postId,Integer page) {
+        List<Comment> findComments = commentService.findCommentByPost(postId, page-1, 5);
+        List<CommentForm> comments = findComments.stream().map(o -> {
+            CommentForm commentForm = new CommentForm();
+            commentForm.setUsername(o.getMember().getUsername());
+            commentForm.setContent(o.getContent());
+            commentForm.setCreated(o.getCreated());
+            commentForm.setId(o.getId());
+            return commentForm;
+        }).collect(Collectors.toList());
+        model.addAttribute("comments",comments);
+        model.addAttribute("currentPage",page);
+    }
+
+    private void addCommentCount(Model model,Long postId){
+        Long mainCommentCount = commentService.getMainCommentCount(postId);
+        Long count=mainCommentCount/5;
+        if(mainCommentCount%5!=0) count++;
+        if(count==0) count=1L;
+        model.addAttribute("totalPages",count);
+
+    }
+
+    @GetMapping("/post/{postId}/comments/new")
+    public String returnToPost(@PathVariable("postId") Long postId,RedirectAttributes redirectAttributes){
+        redirectAttributes.addAttribute("postId",postId);
+        return "redirect:/post/{postId}";
+    }
+    @PostMapping("/post/{postId}/comments/new")
+    public String addComment(@Validated @ModelAttribute("commentForm") CommentAddForm form, BindingResult bindingResult, @PathVariable("postId") Long postId, Model model, @Login Member loginMember, RedirectAttributes redirectAttributes, @ModelAttribute PostForm postForm){
+
+        redirectAttributes.addAttribute("postId",postId);
+        if(loginMember==null){
+            return "redirect:/login?redirectURI=/post/{postId}";
+        }
+        if(bindingResult.hasErrors()){
+            addCommentToModel(model,postId,1);
+            return "postForm";
+        }
+        Post post = postService.findByIdWithMember(postId).get();
+        Comment comment=Comment.createComment(loginMember,form.getContent(),post);
+        commentService.saveInPost(comment);
+        return "redirect:/post/{postId}";
+    }
+    @GetMapping("/post/{postId}/comments/{commentId}/new")
+    public String returnToPostWithChild(@PathVariable Long postId,@PathVariable Long commentId,RedirectAttributes redirectAttributes){
+        redirectAttributes.addAttribute("postId",postId);
+        redirectAttributes.addAttribute("commentId",commentId);
+        return "redirect:/post/{postId}?comment={commentId}";
+    }
+    @PostMapping("/post/{postId}/comments/{commentId}/new")
+    public String addChildComment(@Validated @ModelAttribute("commentForm") CommentAddForm form, BindingResult bindingResult, @PathVariable Long postId, @PathVariable Long commentId, Model model, @Login Member loginMember, RedirectAttributes redirectAttributes, @ModelAttribute PostForm postForm){
+
+        redirectAttributes.addAttribute("postId",postId);
+        redirectAttributes.addAttribute("commentId",commentId);
+        if(loginMember==null){
+            return "redirect:/login?redirectURI=/post/{postId}/comments/{postId}";
+        }
+        if(bindingResult.hasErrors()){
+            addCommentToModel(model,postId,1);
+            return "postForm";
+        }
+        Post post = postService.findByIdWithMember(postId).get();
+        Comment comment=Comment.createComment(loginMember,form.getContent(),post);
+        commentService.saveInComment(comment,commentId);
+        return "redirect:/post/{postId}?comment={commentId}";
     }
 
     @GetMapping("/post/{postId}/edit")
@@ -93,6 +170,7 @@ public class PostController {
         return "redirect:/post/{id}";
     }
 
+
     private static Post makePostWithEditPostForm(EditPostForm editPostForm) {
         Post post=new Post();
         post.setId(editPostForm.getPostId());
@@ -110,17 +188,4 @@ public class PostController {
         }
     }
 
-    private void addPostFormToModel(Model model) {
-        List<Post> posts = postService.findPosts(0, 10);
-        List<PostForm> postForms = posts.stream().map(o -> {
-            String content="";
-            if(o.getContent().length()>100){
-                content=o.getContent().substring(0,100);
-            }else{
-                content=o.getContent();
-            }
-            return new PostForm(o.getTitle(),content,o.getStatus(),o.getId());
-        }).collect(Collectors.toList());
-        model.addAttribute("postForms",postForms);
-    }
 }

@@ -28,7 +28,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(@Login Member member, Model model, @ModelAttribute("postSearchForm") PostSearchForm postSearchForm, @RequestParam(name = "page",defaultValue = "1") Integer page){
         addPostFormToModel(model,postSearchForm,page);
-        addPostCount(model,page);
+        addPostCount(model);
 
         if(member==null){
             return "home";
@@ -41,7 +41,7 @@ public class HomeController {
     @GetMapping("/loginHome")
     public String loginHome(@Login Member member,Model model,@ModelAttribute("postSearchForm") PostSearchForm postSearchForm,@RequestParam(name = "page",defaultValue = "1") Integer page){
         addPostFormToModel(model,postSearchForm,page);
-        addPostCount(model,page);
+        addPostCount(model);
 
         if(member==null){
             return "redirect:/";
@@ -66,16 +66,11 @@ public class HomeController {
         model.addAttribute("currentPage",page);
     }
 
-    private void addPostCount(Model model,Integer page){
+    private void addPostCount(Model model){
         Long postCount = postService.getPostCount();
         Long count=postCount/10;
         if(postCount%10>0) count++;
-        model.addAttribute("count",count);
-        if((count-(page-1))>10){
-            model.addAttribute("scope",9);
-        }else{
-            log.info("count = {}",count-page);
-            model.addAttribute("scope",count-page);
-        }
+        if(count==0) count++;
+        model.addAttribute("totalPages",count);
     }
 }
