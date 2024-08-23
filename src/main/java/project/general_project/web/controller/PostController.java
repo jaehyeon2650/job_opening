@@ -60,7 +60,7 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String postForm(@PathVariable("id") Long postId, Model model, @Login Member loginMember, @RequestParam(name = "comment",defaultValue = "-1") Long commentId){
+    public String postForm(@PathVariable("id") Long postId, Model model, @Login Member loginMember, @RequestParam(name = "comment",defaultValue = "-1") Long commentId,@RequestParam(name = "page",defaultValue = "1") Integer page){
         Optional<Post> findPost = postService.findByIdWithMember(postId);
         if(!findPost.isPresent()) return "redirect:/";
         Post post = findPost.get();
@@ -78,6 +78,29 @@ public class PostController {
         return "postForm";
     }
 
+    private void addCommentToModel(Model model, Long postId,Integer page) {
+        List<Comment> findComments = commentService.findCommentByPost(postId, page-1, 5);
+        List<CommentForm> comments = findComments.stream().map(o -> {
+            CommentForm commentForm = new CommentForm();
+            commentForm.setUsername(o.getMember().getUsername());
+            commentForm.setContent(o.getContent());
+            commentForm.setCreated(o.getCreated());
+            commentForm.setId(o.getId());
+            return commentForm;
+        }).collect(Collectors.toList());
+        model.addAttribute("comments",comments);
+        model.addAttribute("currentPage",page);
+    }
+
+    private void addCommentCount(Model model,Long postId){
+        Long mainCommentCount = commentService.getMainCommentCount(postId);
+        Long count=mainCommentCount/5;
+        if(mainCommentCount%5!=0) count++;
+        if(count==0) count=1L;
+        model.addAttribute("totalPages",count);
+
+    }
+
     @GetMapping("/post/{postId}/comments/new")
     public String returnToPost(@PathVariable("postId") Long postId,RedirectAttributes redirectAttributes){
         redirectAttributes.addAttribute("postId",postId);
@@ -91,8 +114,7 @@ public class PostController {
             return "redirect:/login?redirectURI=/post/{postId}";
         }
         if(bindingResult.hasErrors()){
-            List<Comment> comments = commentService.findCommentByPost(postId, 0, 10);
-            model.addAttribute("comments",comments);
+            addCommentToModel(model,postId,1);
             return "postForm";
         }
         Post post = postService.findByIdWithMember(postId).get();
@@ -115,8 +137,7 @@ public class PostController {
             return "redirect:/login?redirectURI=/post/{postId}/comments/{postId}";
         }
         if(bindingResult.hasErrors()){
-            List<Comment> comments = commentService.findCommentByPost(postId, 0, 10);
-            model.addAttribute("comments",comments);
+            addCommentToModel(model,postId,1);
             return "postForm";
         }
         Post post = postService.findByIdWithMember(postId).get();
