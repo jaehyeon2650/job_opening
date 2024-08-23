@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 public class PostController {
+
     private final PostService postService;
     private final MemberService memberService;
     private final CommentService commentService;
@@ -54,9 +55,7 @@ public class PostController {
         }
         Post post = Post.createPost(findMember, postForm.getTitle(), postForm.getContent());
         postService.save(post);
-        model.addAttribute("member",findMember);
-        addPostFormToModel(model);
-        return "loginHome";
+        return "redirect:/loginHome";
     }
 
     @GetMapping("/post/{id}")
@@ -167,17 +166,4 @@ public class PostController {
         }
     }
 
-    private void addPostFormToModel(Model model) {
-        List<Post> posts = postService.findPosts(0, 10);
-        List<PostForm> postForms = posts.stream().map(o -> {
-            String content="";
-            if(o.getContent().length()>100){
-                content=o.getContent().substring(0,100);
-            }else{
-                content=o.getContent();
-            }
-            return new PostForm(o.getTitle(),content,o.getStatus(),o.getId());
-        }).collect(Collectors.toList());
-        model.addAttribute("postForms",postForms);
-    }
 }
