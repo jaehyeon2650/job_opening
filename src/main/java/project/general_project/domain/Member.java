@@ -1,9 +1,6 @@
 package project.general_project.domain;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +16,10 @@ public class Member {
     private String email;
     @Embedded
     private Address address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     private Member(String username, String userId, String password,String phone,String email, Address address) {
         this.username = username;
