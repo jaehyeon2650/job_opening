@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>팀 생성</title>
+    <link th:href="@{/css/team.css}" href="../static/css/team.css" rel="stylesheet">
+</head>
+<body>
+<div class="team-container">
+    <form th:action method="post" class="team-form" th:object="${teamForm}">
+        <h2 class="team-title">팀 생성하기</h2>
+
+        <label for="name" class="team-label">팀 이름</label>
+        <input type="text" th:field="*{name}"  id="name" class="team-input" placeholder="팀 이름을 입력하세요." >
+        <p th:errors="*{name}" class="error"></p>
+
+
+        <label for="leader" class="team-label">팀 주장</label>
+        <input type="text" th:field="${member.userId}"  id="leader" class="team-input" disabled />
+
+
+        <label class="team-label">팀원</label>
+        <div id="members-container" class="members-container">
+            <input th:if="*{members != null}" th:each="m:*{members}" type="text" th:value="${m}" name="members" class="team-input"  />
+            <p th:errors="*{members}" class="error"></p>
+            <input th:if="*{members == null}" type="text" name="members" class="team-input" placeholder="팀원의 아이디를 입력하세요." />
+        </div>
+
+        <button type="button" class="add-member-button" onclick="addMemberInput()">팀원 추가</button>
+        <button type="submit" class="team-button">저장하기</button>
+        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    </form>
+</div>
+<script>
+    let memberCount = 1;
+
+    function addMemberInput() {
+
+        var input = document.createElement("input");
+        input.type = "text";
+        input.name = "members";
+        input.placeholder = "팀원의 아이디를 입력하세요.";
+        input.className = "team-input";
+
+        var container = document.getElementById("members-container");
+        container.appendChild(input);
+
+        memberCount++;
+    }
+</script>
+</body>
+</html>
+
