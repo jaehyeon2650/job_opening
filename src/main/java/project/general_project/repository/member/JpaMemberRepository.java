@@ -29,4 +29,10 @@ public class JpaMemberRepository implements MemberRepository{
                 .getResultList();
         return members.stream().findAny();
     }
+
+    @Override
+    public Member findByIdWithTeam(Long id){
+        return em.createQuery("select m from Member m join fetch Team t on m.id=:memberId",Member.class)
+                .setParameter("memberId",id).getSingleResult();
+    }
 }

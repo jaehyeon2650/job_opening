@@ -9,5 +9,6 @@ public interface MemberRepository {
     void save(Member member);
     Member findById(Long id);
     Optional<Member> findByUserID(String userId);
+    Member findByIdWithTeam(Long id);
 
 }
