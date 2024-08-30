@@ -34,6 +34,11 @@ public class PostRepository {
                 .setParameter("postId",postId)
                 .getSingleResult();
     }
+    public List<Post> findByMemberId(Long memberId){
+        return em.createQuery("select p from Post p where p.member.id=:memberId", Post.class)
+                .setParameter("memberId",memberId)
+                .getResultList();
+    }
 
     public Comment findCommentById(Long commentId){
         return em.find(Comment.class,commentId);
