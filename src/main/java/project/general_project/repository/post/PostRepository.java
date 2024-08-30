@@ -70,4 +70,15 @@ public class PostRepository {
     private BooleanExpression titleLike(String content){
         return content != null? stringTemplate("lower({0})",post.title).like("%"+content.toLowerCase()+"%"):null;
     }
+
+    public void deletePost(Long postId){
+        List<Comment> comments = query.selectFrom(comment)
+                .where(comment.parent.isNull().and(comment.post.id.eq(postId)))
+                .fetch();
+        for (Comment comment1 : comments) {
+            em.remove(comment1);
+        }
+        Post post = em.find(Post.class, postId);
+        em.remove(post);
+    }
 }
