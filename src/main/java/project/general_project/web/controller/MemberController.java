@@ -123,4 +123,13 @@ public class MemberController {
         return "redirect:/loginHome";
     }
 
+    @GetMapping("/member/{id}")
+    public String memberForm(@PathVariable("id") Long id,Model model,@Login Member loginMember){
+        Member findMember = memberService.findByIdWithTeam(id);
+        List<Post> posts = postService.findByMemberId(id);
+        MemberForm memberForm=new MemberForm(findMember,posts);
+        model.addAttribute("memberForm",memberForm);
+        model.addAttribute("loginMember",loginMember);
+        return "memberForm";
+    }
 }
