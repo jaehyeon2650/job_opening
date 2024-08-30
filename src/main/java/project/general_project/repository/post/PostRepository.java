@@ -10,6 +10,7 @@ import project.general_project.domain.Post;
 import java.util.List;
 
 import static com.querydsl.core.types.dsl.Expressions.*;
+import static project.general_project.domain.QComment.*;
 import static project.general_project.domain.QPost.*;
 
 @Repository
@@ -39,7 +40,7 @@ public class PostRepository {
     }
 
     public List<Post> getPosts(int start,int count){
-        return em.createQuery("select p from Post p", Post.class)
+        return em.createQuery("select p from Post p order by p.created asc", Post.class)
                 .setFirstResult(start*10)
                 .setMaxResults(count)
                 .getResultList();
@@ -49,7 +50,7 @@ public class PostRepository {
         return query
                 .selectFrom(post)
                 .where(titleLike(content))
-                .orderBy(post.status.desc())
+                .orderBy(post.status.desc(),post.created.desc())
                 .offset(start*10)
                 .limit(count)
                 .fetch();
