@@ -12,17 +12,17 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import project.general_project.domain.Address;
 import project.general_project.domain.Member;
+import project.general_project.domain.Post;
 import project.general_project.service.LoginService;
 import project.general_project.service.MemberService;
+import project.general_project.service.PostService;
 import project.general_project.validation.EditValidator;
 import project.general_project.validation.JoinValidator;
 
 import project.general_project.web.SessionConst;
-import project.general_project.web.form.memberForm.EditForm;
-import project.general_project.web.form.memberForm.JoinForm;
-import project.general_project.web.form.memberForm.Login;
+import project.general_project.web.form.memberForm.*;
 
-import project.general_project.web.form.memberForm.LoginForm;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -31,6 +31,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
+    private final PostService postService;
     private final JoinValidator joinValidator;
     private final EditValidator editValidator;
 
@@ -99,7 +100,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/member/{id}/edit")
     public String memberEditForm(@PathVariable("id") Long memerId, Model model){
         Member findMember = memberService.findById(memerId);
         EditForm editForm=new EditForm(findMember);
@@ -107,7 +108,7 @@ public class MemberController {
         return "updateMemberForm";
     }
 
-    @PostMapping("/{id}/edit")
+    @PostMapping("/member/{id}/edit")
     public String editMember(@Validated @ModelAttribute("editForm") EditForm editForm,BindingResult bindingResult,@PathVariable("id") Long memerId,Model model){
         if(bindingResult.hasErrors()){
             log.info("error");
