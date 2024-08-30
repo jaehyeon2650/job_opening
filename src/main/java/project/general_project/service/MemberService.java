@@ -41,4 +41,8 @@ public class MemberService {
         findMember.setEmail(member.getEmail());
         return findMember.getId();
     }
+
+    public Member findByIdWithTeam(Long id){
+        return repository.findByIdWithTeam(id);
+    }
 }
