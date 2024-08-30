@@ -54,4 +54,9 @@ public class CommentRepository {
                 .fetch();
         return fetch.get(0);
     }
+
+    public void deleteComment(Long id){
+        Comment comment1 = em.find(Comment.class, id);
+        em.remove(comment1);
+    }
 }
