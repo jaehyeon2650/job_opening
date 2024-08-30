@@ -170,6 +170,15 @@ public class PostController {
         return "redirect:/post/{id}";
     }
 
+    @PostMapping("/post/{postId}/delete")
+    public String deletePost(@Login Member member,@ModelAttribute("postForm") PostForm postForm,@PathVariable("postId") Long postId){
+        Optional<Post> findPost = postService.findByIdWithMember(postId);
+        if(findPost.isEmpty()) return "redirect:/";
+        if(!findPost.get().getMember().getId().equals(member.getId())) return "redirect:/";
+        postService.deletePost(postId);
+        return "redirect:/";
+    }
+
 
     private static Post makePostWithEditPostForm(EditPostForm editPostForm) {
         Post post=new Post();
