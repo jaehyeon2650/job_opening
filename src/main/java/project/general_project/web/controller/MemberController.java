@@ -4,17 +4,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.general_project.domain.Address;
 import project.general_project.domain.Member;
+import project.general_project.domain.Picture;
 import project.general_project.domain.Post;
 import project.general_project.service.LoginService;
 import project.general_project.service.MemberService;
+import project.general_project.service.PictureStore;
 import project.general_project.service.PostService;
 import project.general_project.validation.EditValidator;
 import project.general_project.validation.JoinValidator;
@@ -22,6 +28,8 @@ import project.general_project.validation.JoinValidator;
 import project.general_project.web.SessionConst;
 import project.general_project.web.form.memberForm.*;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
@@ -31,6 +39,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
+    private final PictureStore pictureStore;
     private final PostService postService;
     private final JoinValidator joinValidator;
     private final EditValidator editValidator;
@@ -101,35 +110,54 @@ public class MemberController {
     }
 
     @GetMapping("/member/{id}/edit")
-    public String memberEditForm(@PathVariable("id") Long memerId, Model model){
+    public String memberEditForm(@PathVariable("id") Long memerId, Model model,@Login Member loginMember){
+        if(loginMember.getId()!=memerId) return "redirect:/";
         Member findMember = memberService.findById(memerId);
-        EditForm editForm=new EditForm(findMember);
+        EditForm editForm=null;
+        if(findMember.getPicture()!=null){
+            editForm=new EditForm(findMember,findMember.getPicture().getSaveName());
+        }else editForm=new EditForm(findMember,null);
         model.addAttribute("editForm",editForm);
         return "updateMemberForm";
     }
 
     @PostMapping("/member/{id}/edit")
-    public String editMember(@Validated @ModelAttribute("editForm") EditForm editForm,BindingResult bindingResult,@PathVariable("id") Long memerId,Model model){
+    public String editMember(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @PathVariable("id") Long memberId, Model model, @Login Member loginMember, RedirectAttributes redirectAttributes) throws IOException {
+        if(loginMember.getId()!=memberId) return "redirect:/";
+
         if(bindingResult.hasErrors()){
             log.info("error");
             return "updateMemberForm";
         }
+
         Address address=Address.createAddress(editForm.getZipcode(),editForm.getCity(),editForm.getDetailAddress());
         String number= editForm.getFirstPhone()+editForm.getSecondPhone()+editForm.getThirdPhone();
         Member member=Member.createMember(editForm.getId(),editForm.getUsername(),number,editForm.getEmail(),address);
-        Long memberId = memberService.updateMember(member);
-        Member findMember = memberService.findById(memberId);
-        model.addAttribute("member",findMember);
-        return "redirect:/loginHome";
+        memberService.updateMember(member);
+        if(editForm.getMultipartFile()!=null&& StringUtils.hasText(editForm.getMultipartFile().getOriginalFilename())){
+            log.info("name={}",editForm.getMultipartFile().getOriginalFilename());
+            memberService.updatePicture(memberId, editForm.getMultipartFile());
+        }
+        redirectAttributes.addAttribute("id",memberId);
+        return "redirect:/member/{id}";
     }
 
     @GetMapping("/member/{id}")
     public String memberForm(@PathVariable("id") Long id,Model model,@Login Member loginMember){
         Member findMember = memberService.findByIdWithTeam(id);
         List<Post> posts = postService.findByMemberId(id);
-        MemberForm memberForm=new MemberForm(findMember,posts);
+        MemberForm memberForm=null;
+        if(findMember.getPicture()==null){
+            memberForm=new MemberForm(findMember,posts,null);
+        }else memberForm=new MemberForm(findMember,posts,findMember.getPicture().getSaveName());
         model.addAttribute("memberForm",memberForm);
         model.addAttribute("loginMember",loginMember);
         return "memberForm";
+    }
+
+    @ResponseBody
+    @GetMapping("/images/{savedFile}")
+    public Resource getImage(@PathVariable("savedFile") String savedFile) throws MalformedURLException {
+        return new UrlResource("file:"+pictureStore.getFullPath(savedFile));
     }
 }
