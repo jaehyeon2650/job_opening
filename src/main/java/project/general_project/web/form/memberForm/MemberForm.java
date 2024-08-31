@@ -22,7 +22,8 @@ public class MemberForm {
     private String detailAddress;
     private String teamName;
     private List<PostDto> posts=new ArrayList<>();
-    public MemberForm(Member member, List<Post> posts) {
+    private String savedPath;
+    public MemberForm(Member member, List<Post> posts,String savedPath) {
         this.id=member.getId();
         this.username = member.getUsername();
         String phone = member.getPhone();
@@ -39,6 +40,7 @@ public class MemberForm {
         for (Post post : posts) {
             this.posts.add(new PostDto(post.getTitle(),post.getId()));
         }
+        this.savedPath=savedPath;
     }
     @Getter
     @Setter
