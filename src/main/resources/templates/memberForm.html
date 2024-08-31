@@ -10,9 +10,17 @@
 <div class="join-container">
     <form th:action th:method="post" th:object="${memberForm}" class="join-form">
         <h2 class="join-title">회원정보</h2>
+        <div class="form-row">
+            <div class="form-field">
+                <label for="username" class="join-label">이름</label>
+                <input type="text" th:field="*{username}" id="username" class="join-input" disabled />
+            </div>
+            <div class="image-container">
+                <img th:if="*{savedPath != null}" th:src="|/images/*{savedPath}|" class="profile-image"/>
+                <p th:if="*{savedPath==null}" th:text="|저장된 사진이 없습니다|" class="no-image"></p>
+            </div>
 
-        <label for="username" class="join-label">이름</label>
-        <input type="text" th:field="*{username}" id="username" class="join-input" disabled />
+        </div>
 
         <label th:if="${loginMember.id == memberForm.id}" for="firstPhone" class="join-label">핸드폰 번호</label>
         <div th:if="${loginMember.id == memberForm.id}" class="phone-input-group">
