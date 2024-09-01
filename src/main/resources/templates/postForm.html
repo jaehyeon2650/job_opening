@@ -80,7 +80,18 @@
     </div>
 
     <button th:if="${isWriter}" th:onclick="|location.href='@{/post/{postId}/edit (postId=${postForm.postId})}'|" type="button" class="home-button">수정하기</button>
-        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    <button th:if="${isWriter}" th:onclick="|sendPostRequest('@{/post/{postId}/delete (postId=${postForm.postId})}')|" type="button" class="home-button">삭제하기</button>
+    <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
 </div>
+
 </body>
+<script>
+    function sendPostRequest(url) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 </html>

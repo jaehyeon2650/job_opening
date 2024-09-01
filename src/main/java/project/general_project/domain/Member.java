@@ -16,6 +16,8 @@ public class Member {
     private String email;
     @Embedded
     private Address address;
+    @Embedded
+    private Picture picture;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")

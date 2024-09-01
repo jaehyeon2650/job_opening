@@ -2,20 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입</title>
+    <title>회원수정</title>
     <link th:href="@{/css/join.css}"
           href="../static/css/join.css" rel="stylesheet">
 </head>
 <body>
 <div class="join-container">
-    <form th:action th:method="post" th:object="${editForm}" class="join-form">
+    <form th:action th:method="post" th:object="${editForm}" class="join-form" enctype="multipart/form-data">
         <h2 class="join-title">회원수정</h2>
         <div th:if="${#fields.hasGlobalErrors()}" class="error">
             <p th:each="err:${#fields.globalErrors()}" th:text="${err}"></p>
         </div>
-        <label for="username" class="join-label">이름</label>
-        <input type="text" th:field="*{username}" id="username" class="join-input" />
-        <p th:errors="*{username}" class="error"></p>
+        <div class="form-row">
+            <div class="form-field">
+                <label for="username" class="join-label">이름</label>
+                <input type="text" th:field="*{username}" id="username" class="join-input" />
+                <p th:errors="*{username}" class="error"></p>
+            </div>
+
+            <div class="image-container">
+                <img th:if="*{savedUrl != null}" th:src="|/images/*{savedUrl}|" class="profile-image"/>
+                <p th:if="*{savedUrl==null}" th:text="|저장된 사진이 없습니다|" class="no-image"></p>
+
+                <label for="file" class="join-label">사진</label>
+                <input type="file" th:field="*{multipartFile}" id="file" class="image-input" accept="image/*">
+            </div>
+        </div>
 
         <label for="firstPhone" class="join-label">핸드폰 번호</label>
         <div class="phone-input-group">

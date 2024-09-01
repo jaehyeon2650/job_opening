@@ -251,4 +251,35 @@ class CommentRepositoryTest {
         //then
         assertThat(mainCommentCount).isEqualTo(1);
     }
+
+    @Test
+    public void 댓글_삭제() throws Exception{
+        //given
+        Comment comment1=new Comment();
+        Comment comment2=new Comment();
+        Comment comment3=new Comment();
+        Comment comment4=new Comment();
+        Comment comment5=new Comment();
+        Member member=new Member();
+        memberRepository.save(member);
+
+        comment1.setMember(member);
+        comment2.setMember(member);
+        comment3.setMember(member);
+        comment4.setMember(member);
+        comment5.setMember(member);
+
+        comment1.addComment(comment2);
+        comment1.addComment(comment3);
+        comment4.addComment(comment5);
+
+        repository.save(comment1);
+        repository.save(comment4);
+        //when
+        repository.deleteComment(comment1.getId());
+        //then
+        Comment comment = repository.findById(comment1.getId());
+        assertThat(comment).isNull();
+
+    }
 }

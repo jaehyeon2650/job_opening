@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Comment;
 import project.general_project.domain.Post;
+import project.general_project.repository.comment.CommentRepository;
 
 import java.util.List;
 
@@ -197,5 +198,37 @@ class PostRepositoryTest {
         Long postCount = postRepository.getPostCount();
         //then
         assertThat(postCount).isEqualTo(42);
+    }
+
+    @Test
+    public void 포스트_삭제() throws Exception{
+        //given
+        Post post=new Post();
+        postRepository.save(post);
+        Comment comment1=new Comment();
+        comment1.setPost(post);
+        Comment comment2=new Comment();
+        comment2.setPost(post);
+        Comment comment3=new Comment();
+        comment3.setPost(post);
+        Comment comment4=new Comment();
+        comment4.setPost(post);
+        comment1.addComment(comment2);
+        comment3.addComment(comment4);
+        em.persist(comment1);
+        em.persist(comment3);
+        //when
+        postRepository.deletePost(post.getId());
+        //then
+        Comment comment1Find = em.find(Comment.class, comment1.getId());
+        Comment comment2Find = em.find(Comment.class, comment2.getId());
+        Comment comment3Find = em.find(Comment.class, comment3.getId());
+        Comment comment4Find = em.find(Comment.class, comment4.getId());
+        assertThat(comment1Find).isNull();
+        assertThat(comment2Find).isNull();
+        assertThat(comment3Find).isNull();
+        assertThat(comment4Find).isNull();
+        Post findPost = em.find(Post.class, post.getId());
+        assertThat(findPost).isNull();
     }
 }

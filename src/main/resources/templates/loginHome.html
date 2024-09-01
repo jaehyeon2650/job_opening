@@ -11,7 +11,7 @@
     </div>
     <div class="header-buttons">
         <button th:onclick="|location.href='@{/logout}'|" type="button" class="btn">로그아웃</button>
-        <button th:onclick="|location.href='@{/{id}/edit (id=${member.id})}'|" class="btn">회원 수정</button>
+        <button th:onclick="|location.href='@{/member/{id} (id=${member.id})}'|" class="btn">회원 정보</button>
         <button th:onclick="|location.href='@{/{id}/post/new (id=${member.id})}'|" class="btn">게시글 작성</button>
         <button th:onclick="|location.href='@{/team/new}'|" class="btn">팀 생성</button>
     </div>

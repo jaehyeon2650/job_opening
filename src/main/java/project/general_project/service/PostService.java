@@ -30,6 +30,9 @@ public class PostService {
         return Optional.of(repository.findByIdWithMember(postId));
     }
 
+    public List<Post> findByMemberId(Long memberId){
+        return repository.findByMemberId(memberId);
+    }
     @Transactional
     public Long updatePost(Post post){
         Post findPost = repository.findById(post.getId());
@@ -48,5 +51,10 @@ public class PostService {
     }
     public Long getPostCount(){
         return repository.getPostCount();
+    }
+
+    @Transactional
+    public void deletePost(Long postId){
+        repository.deletePost(postId);
     }
 }
