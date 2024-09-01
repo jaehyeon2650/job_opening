@@ -5,9 +5,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import project.general_project.domain.Member;
+import project.general_project.domain.Picture;
 import project.general_project.repository.member.MemberRepository;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -15,6 +18,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository repository;
+    private final PictureStore pictureStore;
     private final PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
 
     @Transactional
@@ -40,5 +44,16 @@ public class MemberService {
         findMember.setAddress(member.getAddress());
         findMember.setEmail(member.getEmail());
         return findMember.getId();
+    }
+
+    public Member findByIdWithTeam(Long id){
+        return repository.findByIdWithTeam(id);
+    }
+
+    @Transactional
+    public void updatePicture(Long id, MultipartFile multipartFile) throws IOException {
+        Member findMember = repository.findById(id);
+        Picture picture = pictureStore.savePicture(multipartFile);
+        findMember.setPicture(picture);
     }
 }

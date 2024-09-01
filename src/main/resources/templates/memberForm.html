@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보</title>
+    <link th:href="@{/css/join.css}"
+          href="../static/css/join.css" rel="stylesheet">
+</head>
+<body>
+<div class="join-container">
+    <form th:action th:method="post" th:object="${memberForm}" class="join-form">
+        <h2 class="join-title">회원정보</h2>
+        <div class="form-row">
+            <div class="form-field">
+                <label for="username" class="join-label">이름</label>
+                <input type="text" th:field="*{username}" id="username" class="join-input" disabled />
+            </div>
+            <div class="image-container">
+                <img th:if="*{savedPath != null}" th:src="|/images/*{savedPath}|" class="profile-image"/>
+                <p th:if="*{savedPath==null}" th:text="|저장된 사진이 없습니다|" class="no-image"></p>
+            </div>
+
+        </div>
+
+        <label th:if="${loginMember.id == memberForm.id}" for="firstPhone" class="join-label">핸드폰 번호</label>
+        <div th:if="${loginMember.id == memberForm.id}" class="phone-input-group">
+            <input type="number" th:field="*{firstPhone}" id="firstPhone" class="phone-input" placeholder="010" maxlength="3" disabled />
+            <span class="phone-dash">-</span>
+            <input type="number" th:field="*{secondPhone}" id="secondPhone" class="phone-input" maxlength="4" disabled />
+            <span class="phone-dash">-</span>
+            <input type="number" th:field="*{thirdPhone}" id="thirdPhone" class="phone-input" maxlength="4" disabled />
+        </div>
+
+
+        <label th:if="${loginMember.id == memberForm.id}" for="email" class="join-label">이메일</label>
+        <input th:if="${loginMember.id == memberForm.id}" type="email" th:field="*{email}" id="email" class="join-input" disabled>
+
+
+        <label th:if="${loginMember.id == memberForm.id}" for="zipcode" class="join-label">우편번호</label>
+        <input th:if="${loginMember.id == memberForm.id}" type="text" th:field="*{zipcode}" id="zipcode" class="join-input" disabled>
+
+
+        <label th:if="${loginMember.id == memberForm.id}" for="city" class="join-label">시,군</label>
+        <input th:if="${loginMember.id == memberForm.id}" type="text" th:field="*{city}" id="city" class="join-input" disabled>
+
+
+        <label th:if="${loginMember.id == memberForm.id}" for="detailAddress" class="join-label">세부 주소</label>
+        <input th:if="${loginMember.id == memberForm.id}" type="text" th:field="*{detailAddress}" id="detailAddress" class="join-input" disabled>
+
+
+        <label for="team" class="join-label">소속 팀</label>
+        <input th:if="*{teamName != null and teamName.length() > 0}" type="text" th:field="*{teamName}" id="team" class="join-input" disabled>
+        <input th:if="*{teamName == null}" type="text" th:value="|소속된 팀이 없습니다.|" class="join-input" disabled>
+
+        <label class="join-label">작성된 포스트</label>
+        <p th:if="*{posts.size()>0}" th:each="post:*{posts}"  th:text="${post.name}" th:onclick="|location.href='@{/post/{id} (id=${post.postId})}'|" class="join-input"></p>
+        <p th:if="*{posts.size()==0}" th:text="|작성한 포스트가 없습니다.|" class="join-input"></p>
+
+        <button th:if="${loginMember.id == memberForm.id}" th:onclick="|location.href='@{/member/{id}/edit (id=*{id})}'|" type="button" class="join-button">회원수정하기</button>
+        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    </form>
+</div>
+</body>
+</html>

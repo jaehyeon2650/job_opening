@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 import project.general_project.domain.Member;
 
 @Data
@@ -24,8 +25,10 @@ public class EditForm {
     private String city;
     @NotBlank
     private String detailAddress;
+    private MultipartFile multipartFile;
+    private String savedUrl;
 
-    public EditForm(Member member) {
+    public EditForm(Member member,String savedUrl) {
         this.id=member.getId();
         this.username = member.getUsername();
         String phone = member.getPhone();
@@ -36,6 +39,7 @@ public class EditForm {
         this.zipcode = member.getAddress().getZipcode();
         this.city = member.getAddress().getCity();
         this.detailAddress = member.getAddress().getDetailAddress();
+        this.savedUrl=savedUrl;
     }
 
 }

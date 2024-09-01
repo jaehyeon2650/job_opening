@@ -10,6 +10,7 @@ import project.general_project.domain.Post;
 import java.util.List;
 
 import static com.querydsl.core.types.dsl.Expressions.*;
+import static project.general_project.domain.QComment.*;
 import static project.general_project.domain.QPost.*;
 
 @Repository
@@ -33,13 +34,18 @@ public class PostRepository {
                 .setParameter("postId",postId)
                 .getSingleResult();
     }
+    public List<Post> findByMemberId(Long memberId){
+        return em.createQuery("select p from Post p where p.member.id=:memberId", Post.class)
+                .setParameter("memberId",memberId)
+                .getResultList();
+    }
 
     public Comment findCommentById(Long commentId){
         return em.find(Comment.class,commentId);
     }
 
     public List<Post> getPosts(int start,int count){
-        return em.createQuery("select p from Post p", Post.class)
+        return em.createQuery("select p from Post p order by p.created asc", Post.class)
                 .setFirstResult(start*10)
                 .setMaxResults(count)
                 .getResultList();
@@ -49,7 +55,7 @@ public class PostRepository {
         return query
                 .selectFrom(post)
                 .where(titleLike(content))
-                .orderBy(post.status.desc())
+                .orderBy(post.status.desc(),post.created.desc())
                 .offset(start*10)
                 .limit(count)
                 .fetch();
@@ -63,5 +69,16 @@ public class PostRepository {
 
     private BooleanExpression titleLike(String content){
         return content != null? stringTemplate("lower({0})",post.title).like("%"+content.toLowerCase()+"%"):null;
+    }
+
+    public void deletePost(Long postId){
+        List<Comment> comments = query.selectFrom(comment)
+                .where(comment.parent.isNull().and(comment.post.id.eq(postId)))
+                .fetch();
+        for (Comment comment1 : comments) {
+            em.remove(comment1);
+        }
+        Post post = em.find(Post.class, postId);
+        em.remove(post);
     }
 }

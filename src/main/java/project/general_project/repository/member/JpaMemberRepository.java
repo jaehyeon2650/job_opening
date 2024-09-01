@@ -39,7 +39,7 @@ public class JpaMemberRepository implements MemberRepository{
 
     @Override
     public Member findByIdWithTeam(Long id){
-        return em.createQuery("select m from Member m join fetch Team t on m.id=:memberId",Member.class)
+        return em.createQuery("select m from Member m left join fetch m.team where m.id=:memberId",Member.class)
                 .setParameter("memberId",id).getSingleResult();
     }
 
