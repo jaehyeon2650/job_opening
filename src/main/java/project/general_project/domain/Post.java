@@ -22,9 +22,11 @@ public class Post {
     private LocalDateTime updated;
     @Enumerated(EnumType.STRING)
     private RecruitmentStatus status;
+    @Enumerated(EnumType.STRING)
+    private LevelStatus levelStatus;
 
 
-    public static Post createPost(Member member,String title,String content){
+    public static Post createPost(Member member,String title,String content,LevelStatus levelStatus){
         Post post=new Post();
         post.setMember(member);
         post.setTitle(title);
@@ -32,6 +34,7 @@ public class Post {
         post.setCreated(LocalDateTime.now());
         post.setUpdated(LocalDateTime.now());
         post.setStatus(RecruitmentStatus.READY);
+        post.setLevelStatus(levelStatus);
         return post;
     }
 }
