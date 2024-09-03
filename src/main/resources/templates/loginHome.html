@@ -22,11 +22,18 @@
         <button type="submit" class="search-button">검색</button>
     </form>
 </div>
+<div class="filter-buttons">
+    <button th:onclick="|location.href='@{/loginHome}'|" class="filter-btn">전체</button>
+    <button th:onclick="|location.href='@{/loginHome?level=초급}'|" class="filter-btn">초급</button>
+    <button th:onclick="|location.href='@{/loginHome?level=중급}'|" class="filter-btn">중급</button>
+    <button th:onclick="|location.href='@{/loginHome?level=고급}'|" class="filter-btn">고급</button>
+</div>
 <main class="container">
     <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|" class="post-card">
         <div th:text="${postForm.title}" class="post-title">제목</div>
         <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|" class="post-status closed" ></div>
         <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|" class="post-status open"></div>
+        <div th:text="${postForm.levelStatus.getDescription()}" class="post-status open"></div>
         <div th:text="${postForm.content}" class="post-content">내용</div>
     </div>
 </main>

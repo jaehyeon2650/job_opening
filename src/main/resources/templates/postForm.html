@@ -18,9 +18,11 @@
         <textarea th:field="*{content}" id="content" class="post-textarea" placeholder="내용을 입력하세요" disabled></textarea>
         <p th:errors="*{content}" class="error"></p>
 
+
         <div class="post-meta">
             <p class="post-writer"><strong>작성자:</strong> <span th:text="${postForm.writer}">작성자</span></p>
             <p class="post-date"><strong>작성일:</strong> <span th:text="${#temporals.format(postForm.create, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
+            <p class="post-recruitment"><strong>난이도:</strong> <span th:text="${postForm.levelStatus.getDescription()}">난이도</span></p>
             <p class="post-recruitment"><strong>현재 모집 상태:</strong> <span th:text="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}?'모집 종료':'모집 중'">모집 상태</span></p>
         </div>
     </form>
