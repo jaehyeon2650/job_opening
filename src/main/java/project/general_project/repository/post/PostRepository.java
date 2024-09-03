@@ -75,6 +75,10 @@ public class PostRepository {
         Long count = fetch.get(0);
         return count;
     }
+    public Long getPostCountWithLevelStatus(LevelStatus levelStatus){
+        List<Long> fetch=query.select(post.count()).from(post).where(post.levelStatus.eq(levelStatus)).fetch();
+        return fetch.get(0);
+    }
 
     private BooleanExpression titleLike(String content){
         return content != null? stringTemplate("lower({0})",post.title).like("%"+content.toLowerCase()+"%"):null;
