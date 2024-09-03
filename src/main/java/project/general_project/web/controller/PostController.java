@@ -8,10 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.general_project.domain.Comment;
-import project.general_project.domain.Member;
-import project.general_project.domain.Post;
-import project.general_project.domain.RecruitmentStatus;
+import project.general_project.domain.*;
 import project.general_project.service.CommentService;
 import project.general_project.service.MemberService;
 import project.general_project.service.PostService;
@@ -39,6 +36,11 @@ public class PostController {
         return RecruitmentStatus.values();
     }
 
+    @ModelAttribute("levelTypes")
+    public LevelStatus[] levelTypes(){
+        return LevelStatus.values();
+    }
+
     @GetMapping("/{id}/post/new")
     public String addPostForm(@ModelAttribute("postForm")PostForm postForm,@Login Member loginMember,@PathVariable("id") Long memberId){
         if(loginMember==null||loginMember.getId()!=memberId) return "redirect:/login";
@@ -54,7 +56,7 @@ public class PostController {
         if(loginMember.getId() != findMember.getId()){
             return "redirect:/login";
         }
-        Post post = Post.createPost(findMember, postForm.getTitle(), postForm.getContent());
+        Post post = Post.createPost(findMember, postForm.getTitle(), postForm.getContent(),postForm.getLevelStatus());
         postService.save(post);
         return "redirect:/loginHome";
     }
@@ -64,7 +66,7 @@ public class PostController {
         Optional<Post> findPost = postService.findByIdWithMember(postId);
         if(!findPost.isPresent()) return "redirect:/";
         Post post = findPost.get();
-        PostForm postForm=new PostForm(post.getTitle(),post.getContent(),post.getStatus(),post.getId(),post.getMember().getUsername(),post.getCreated());
+        PostForm postForm=new PostForm(post.getTitle(),post.getContent(),post.getStatus(),post.getId(),post.getMember().getUsername(),post.getCreated(),post.getLevelStatus());
         model.addAttribute("postForm",postForm);
         addModelIsWriter(model, loginMember, post);
         addCommentToModel(model,post.getId(),page);
@@ -152,7 +154,7 @@ public class PostController {
         if(findPost.isEmpty()) return "redirect:/";
         Post post = findPost.get();
         if(loginMember.getId()!=post.getMember().getId()) return "redirect:/";
-        EditPostForm editPostForm=new EditPostForm(post.getTitle(),post.getContent(),post.getStatus(),post.getId());
+        EditPostForm editPostForm=new EditPostForm(post.getTitle(),post.getContent(),post.getStatus(),post.getId(),post.getLevelStatus());
         model.addAttribute("editPostForm",editPostForm);
         return "editForm";
     }
@@ -164,6 +166,7 @@ public class PostController {
         if(bindingResult.hasErrors()){
             return "editForm";
         }
+        log.info("level={}",editPostForm.getLevelStatus());
         Post post = makePostWithEditPostForm(editPostForm);
         Long id = postService.updatePost(post);
         redirectAttributes.addAttribute("id",id);
@@ -186,6 +189,7 @@ public class PostController {
         post.setTitle(editPostForm.getTitle());
         post.setContent(editPostForm.getContent());
         post.setStatus(editPostForm.getStatus());
+        post.setLevelStatus(editPostForm.getLevelStatus());
         return post;
     }
 
