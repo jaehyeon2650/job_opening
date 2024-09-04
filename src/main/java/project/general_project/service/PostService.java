@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Comment;
+import project.general_project.domain.LevelStatus;
 import project.general_project.domain.Post;
 import project.general_project.repository.post.PostRepository;
 
@@ -40,6 +41,7 @@ public class PostService {
         findPost.setUpdated(LocalDateTime.now());
         findPost.setStatus(post.getStatus());
         findPost.setContent(post.getContent());
+        findPost.setLevelStatus(post.getLevelStatus());
         return findPost.getId();
     }
     public List<Post> findPosts(int start,int count){
@@ -49,10 +51,15 @@ public class PostService {
     public List<Post> findPostsByTitle(String content,int start,int count){
         return repository.getPostsByTitle(content,start,count);
     }
+    public List<Post> findPostsByLevelStatus(LevelStatus levelStatus,int start,int count){
+        return repository.getPostsByLevelStatus(levelStatus,start,count);
+    }
     public Long getPostCount(){
         return repository.getPostCount();
     }
-
+    public Long getPostCountByLevelStatus(LevelStatus levelStatus){
+        return repository.getPostCountWithLevelStatus(levelStatus);
+    }
     @Transactional
     public void deletePost(Long postId){
         repository.deletePost(postId);

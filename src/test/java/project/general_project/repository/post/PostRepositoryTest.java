@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Comment;
+import project.general_project.domain.LevelStatus;
 import project.general_project.domain.Post;
 import project.general_project.repository.comment.CommentRepository;
 
@@ -230,5 +231,53 @@ class PostRepositoryTest {
         assertThat(comment4Find).isNull();
         Post findPost = em.find(Post.class, post.getId());
         assertThat(findPost).isNull();
+    }
+
+    @Test
+    public void 레벨로_포스터_찾기() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setLevelStatus(LevelStatus.BEGINNER);
+        Post post2=new Post();
+        post2.setLevelStatus(LevelStatus.INTERMEDIATE);
+        Post post3=new Post();
+        post3.setLevelStatus(LevelStatus.ADVANCED);
+        Post post4=new Post();
+        post4.setLevelStatus(LevelStatus.BEGINNER);
+        Post post5=new Post();
+        post5.setLevelStatus(LevelStatus.BEGINNER);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
+        postRepository.save(post4);
+        postRepository.save(post5);
+        //when
+        List<Post> postsByLevelStatus = postRepository.getPostsByLevelStatus(LevelStatus.BEGINNER, 0, 10);
+        //then
+        assertThat(postsByLevelStatus.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void 레벨로_포스터_개수_찾기() throws Exception{
+        //given
+        Post post1=new Post();
+        post1.setLevelStatus(LevelStatus.BEGINNER);
+        Post post2=new Post();
+        post2.setLevelStatus(LevelStatus.INTERMEDIATE);
+        Post post3=new Post();
+        post3.setLevelStatus(LevelStatus.ADVANCED);
+        Post post4=new Post();
+        post4.setLevelStatus(LevelStatus.BEGINNER);
+        Post post5=new Post();
+        post5.setLevelStatus(LevelStatus.BEGINNER);
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
+        postRepository.save(post4);
+        postRepository.save(post5);
+        //when
+        Long count = postRepository.getPostCountWithLevelStatus(LevelStatus.BEGINNER);
+        //then
+        assertThat(count).isEqualTo(3);
     }
 }

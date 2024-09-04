@@ -18,6 +18,16 @@
         <textarea th:field="*{content}" id="content" class="post-textarea" placeholder="내용을 입력하세요"></textarea>
         <p th:errors="*{content}" class="error"></p>
 
+        <div>
+            <label for="level" class="post-label">난이도</label>
+            <div id="level" th:each="levelType:${levelTypes}" class="radio-group">
+                <div class="custom-radio-wrapper">
+                    <input type="radio" th:field="*{levelStatus}" th:value="${levelType.name()}" class="custom-radio">
+                    <label th:for="${#ids.prev('levelStatus')}" th:text="${levelType.getDescription()}" class="custom-radio-label"></label>
+                </div>
+            </div>
+        </div>
+
         <div class="post-status">
             <div class="status-label">모집 상태</div>
             <div class="status-options" th:each="code : ${codes}">

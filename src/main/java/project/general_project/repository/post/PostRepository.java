@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import project.general_project.domain.Comment;
+import project.general_project.domain.LevelStatus;
 import project.general_project.domain.Post;
 
 import java.util.List;
@@ -50,7 +51,15 @@ public class PostRepository {
                 .setMaxResults(count)
                 .getResultList();
     }
-
+    public List<Post> getPostsByLevelStatus(LevelStatus levelStatus,int start,int count){
+        return query
+                .selectFrom(post)
+                .where(post.levelStatus.eq(levelStatus))
+                .orderBy(post.status.desc(),post.created.desc())
+                .offset(start*10)
+                .limit(count)
+                .fetch();
+    }
     public List<Post> getPostsByTitle(String content,int start,int count){
         return query
                 .selectFrom(post)
@@ -65,6 +74,10 @@ public class PostRepository {
         List<Long> fetch = query.select(post.count()).from(post).fetch();
         Long count = fetch.get(0);
         return count;
+    }
+    public Long getPostCountWithLevelStatus(LevelStatus levelStatus){
+        List<Long> fetch=query.select(post.count()).from(post).where(post.levelStatus.eq(levelStatus)).fetch();
+        return fetch.get(0);
     }
 
     private BooleanExpression titleLike(String content){

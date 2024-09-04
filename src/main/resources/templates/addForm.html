@@ -6,21 +6,32 @@
     <link th:href="@{/css/post.css}" href="../static/css/post.css" rel="stylesheet">
 </head>
 <body>
-    <div class="post-container">
-        <form th:action method="post" th:object="${postForm}" class="post-form">
-           <h2 class="post-title">게시글 작성</h2>
+<div class="post-container">
+    <form th:action method="post" th:object="${postForm}" class="post-form">
+        <h2 class="post-title">게시글 작성</h2>
 
-            <label for="title" class="post-label">제목</label>
-            <input type="text" th:field="*{title}" id="title" class="post-input" placeholder="제목을 입력하세요" >
-            <p th:errors="*{title}" class="error"></p>
+        <label for="title" class="post-label">제목</label>
+        <input type="text" th:field="*{title}" id="title" class="post-input" placeholder="제목을 입력하세요">
+        <p th:errors="*{title}" class="error"></p>
 
-            <label for="content" class="post-label">내용</label>
-            <textarea th:field="*{content}" id="content" class="post-textarea" placeholder="내용을 입력하세요"></textarea>
-            <p th:errors="*{content}" class="error"></p>
+        <label for="content" class="post-label">내용</label>
+        <textarea th:field="*{content}" id="content" class="post-textarea" placeholder="내용을 입력하세요"></textarea>
+        <p th:errors="*{content}" class="error"></p>
 
-            <button type="submit" class="post-button">저장하기</button>
-            <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
-        </form>
-    </div>
+        <div>
+            <label for="level" class="post-label">난이도</label>
+            <div id="level" th:each="levelType:${levelTypes}" class="radio-group">
+                <div class="custom-radio-wrapper">
+                    <input type="radio" th:field="*{levelStatus}" th:value="${levelType.name()}" class="custom-radio">
+                    <label th:for="${#ids.prev('levelStatus')}" th:text="${levelType.getDescription()}"
+                           class="custom-radio-label"></label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="post-button">저장하기</button>
+        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    </form>
+</div>
 </body>
 </html>
