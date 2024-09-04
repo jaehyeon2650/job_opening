@@ -21,6 +21,7 @@ public class MemberForm {
     private String city;
     private String detailAddress;
     private String teamName;
+    private Long teamId;
     private List<PostDto> posts=new ArrayList<>();
     private String savedPath;
     public MemberForm(Member member, List<Post> posts,String savedPath) {
@@ -36,6 +37,7 @@ public class MemberForm {
         this.detailAddress = member.getAddress().getDetailAddress();
         if(member.getTeam()!=null){
             this.teamName=member.getTeam().getName();
+            this.teamId=member.getTeam().getId();
         }
         for (Post post : posts) {
             this.posts.add(new PostDto(post.getTitle(),post.getId()));

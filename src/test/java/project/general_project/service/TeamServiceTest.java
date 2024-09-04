@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Member;
 import project.general_project.domain.Team;
 import project.general_project.exception.NoUserException;
+import project.general_project.repository.member.MemberRepository;
+import project.general_project.repository.team.TeamRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,10 @@ class TeamServiceTest {
 
     @Autowired
     TeamService teamService;
+    @Autowired
+    TeamRepository teamRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     public void 팀_생성() throws Exception{
@@ -114,5 +120,66 @@ class TeamServiceTest {
         assertThat(member4.getTeam()).isNull();
         Team teamFind = teamService.findTeamById(teamId);
         assertThat(teamFind).isNull();
+    }
+
+    @Test
+    public void 팀_탈퇴1() throws Exception{
+        //given
+        Member member1 = new Member();
+        Member member2 = new Member();
+        Member member3 = new Member();
+        Member member4 = new Member();
+        Team team=new Team();
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.addMember(member4);
+        team.setLeader(member1);
+        teamRepository.save(team);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        em.flush();
+        em.clear();
+        //when
+        teamService.leaveTheTeam(member2.getId(),team.getId());
+        em.flush();
+        em.clear();
+        Team findTeam = teamService.findTeamById(team.getId());
+        Member findMember = memberRepository.findById(member2.getId());
+        //then
+        assertThat(findTeam.getMembers().size()).isEqualTo(3);
+        assertThat(findMember.getTeam()).isNull();
+    }
+    @Test
+    public void 팀_탈퇴2() throws Exception{
+        //given
+        Member member1 = new Member();
+        Member member2 = new Member();
+        Member member3 = new Member();
+        Member member4 = new Member();
+        Team team=new Team();
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.addMember(member4);
+        team.setLeader(member1);
+        teamRepository.save(team);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        em.flush();
+        em.clear();
+        //when
+        teamService.leaveTheTeam(member1.getId(),team.getId());
+        em.flush();
+        em.clear();
+        Team findTeam = teamService.findTeamById(team.getId());
+        Member findMember = memberRepository.findById(member2.getId());
+        //then
+        assertThat(findTeam).isNull();
+        assertThat(findMember.getTeam()).isNull();
     }
 }

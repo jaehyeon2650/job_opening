@@ -7,8 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.general_project.domain.Member;
+import project.general_project.exception.NoTeamException;
 import project.general_project.exception.NoUserException;
 import project.general_project.exception.UserHasTeamException;
 import project.general_project.service.TeamService;
@@ -48,5 +51,17 @@ public class TeamController {
             return "addTeamForm";
         }
         return "redirect:/";
+    }
+
+    @PostMapping("/member/{memberId}/team/{teamId}/delete")
+    public String leaveTeam(@PathVariable Long memberId, @PathVariable Long teamId, @Login Member member, RedirectAttributes redirectAttributes){
+        if(member.getId()!=memberId) return "redirect:/";
+        try{
+            teamService.leaveTheTeam(memberId,teamId);
+        }catch (NoTeamException e){
+            return "redirect:/";
+        }
+        redirectAttributes.addAttribute("memberId",memberId);
+        return "redirect:/member/{memberId}";
     }
 }

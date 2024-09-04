@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import project.general_project.domain.Member;
 import project.general_project.domain.Team;
 
+import static project.general_project.domain.QTeam.*;
+
 @Repository
 public class TeamRepository {
     private final EntityManager em;
@@ -22,6 +24,12 @@ public class TeamRepository {
 
     public Team getTeamById(Long id){
         return em.find(Team.class,id);
+    }
+    public Team getTeamByIdWithLeader(Long id){
+        return query.selectFrom(team)
+                .join(team.leader).fetchJoin()
+                .where(team.id.eq(id)).fetchOne();
+
     }
 
     public void deleteTeam(Team team){
