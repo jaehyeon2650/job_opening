@@ -115,4 +115,32 @@ class TeamRepositoryTest {
         assertThat(member3.getTeam()).isNull();
         assertThat(member4.getTeam()).isNull();
     }
+    
+    @Test
+    public void 리더와_함께_팀_조회() throws Exception{
+        //given
+        Member member1 = new Member();
+        Member member2 = new Member();
+        Member member3 = new Member();
+        Member member4 = new Member();
+        Team team=new Team();
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.addMember(member4);
+        team.setLeader(member1);
+        teamRepository.save(team);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        memberRepository.save(member4);
+        em.flush();
+        em.clear();
+        //when
+        System.out.println("===============================================");
+        Team findTeam = teamRepository.getTeamByIdWithLeader(team.getId());
+        System.out.println("===============================================");
+        //then
+        assertThat(findTeam.getLeader().getId()).isEqualTo(member1.getId());
+    }
 }
