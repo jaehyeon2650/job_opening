@@ -50,6 +50,7 @@
 
         <label for="team" class="join-label">소속 팀</label>
         <input th:if="*{teamName != null and teamName.length() > 0}" type="text" th:field="*{teamName}" id="team" class="join-input" disabled>
+        <button type="button" class="leave-team-button" th:if="*{teamId != null}" th:onclick="|sendPostRequest('@{/member/{memberId}/team/{teamId}/delete (memberId=*{id},teamId=*{teamId})}')|">팀 탈퇴하기</button>
         <input th:if="*{teamName == null}" type="text" th:value="|소속된 팀이 없습니다.|" class="join-input" disabled>
 
         <label class="join-label">작성된 포스트</label>
@@ -61,4 +62,13 @@
     </form>
 </div>
 </body>
+<script>
+    function sendPostRequest(url) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 </html>
