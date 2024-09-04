@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Member;
 import project.general_project.domain.Team;
+import project.general_project.exception.NoTeamException;
 import project.general_project.exception.NoUserException;
 import project.general_project.exception.UserHasTeamException;
 import project.general_project.repository.member.MemberRepository;
@@ -43,5 +44,21 @@ public class TeamService {
     @Transactional
     public Team findTeamById(Long teamId){
         return teamRepository.getTeamById(teamId);
+    }
+
+    @Transactional
+    public void leaveTheTeam(Long memberId,Long teamId){
+        Team team = teamRepository.getTeamById(teamId);
+        if(team==null) throw new NoTeamException();
+        if(team.getLeader().getId()==memberId){
+            teamRepository.deleteTeam(team);
+        }else{
+            Member findMember = memberRepository.findByIdWithTeam(memberId);
+            findMember.setTeam(null);
+            team.getMembers().removeIf(member -> member.getId()==memberId);
+            if(team.getMembers().isEmpty()){
+                teamRepository.deleteTeam(team);
+            }
+        }
     }
 }
