@@ -4,19 +4,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.general_project.domain.Member;
+import project.general_project.domain.Team;
 import project.general_project.exception.NoTeamException;
 import project.general_project.exception.NoUserException;
 import project.general_project.exception.UserHasTeamException;
+import project.general_project.service.MemberService;
 import project.general_project.service.TeamService;
-import project.general_project.web.form.TeamForm;
+import project.general_project.web.form.teamForm.CreateTeamForm;
 import project.general_project.web.form.memberForm.Login;
+import project.general_project.web.form.teamForm.EditTeamForm;
+import project.general_project.web.form.teamForm.TeamForm;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +34,7 @@ public class TeamController {
     @GetMapping("/team/new")
     public String teamForm(@Login Member loginMember, Model model){
         model.addAttribute("member",loginMember);
-        model.addAttribute("teamForm",new TeamForm());
+        model.addAttribute("teamForm",new CreateTeamForm());
         return "addTeamForm";
     }
 
