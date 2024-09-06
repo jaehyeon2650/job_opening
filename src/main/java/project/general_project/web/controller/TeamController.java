@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TeamController {
     private final TeamService teamService;
-
+    private final MemberService memberService;
     @GetMapping("/team/new")
     public String teamForm(@Login Member loginMember, Model model){
         model.addAttribute("member",loginMember);
@@ -39,9 +39,12 @@ public class TeamController {
     }
 
     @PostMapping("/team/new")
-    public String teamForm(@Login Member loginMember, @ModelAttribute("teamForm") TeamForm teamForm, BindingResult bindingResult,Model model){
-        List<String> members=new ArrayList<>(Collections.nCopies(teamForm.getMembers().size(),""));
-        Collections.copy(members,teamForm.getMembers());
+    public String teamForm(@Login Member loginMember, @Validated @ModelAttribute("teamForm") CreateTeamForm teamForm, BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("member",loginMember);
+            return "addTeamForm";
+        }
+        List<String> members=deleteBlank(teamForm.getMembers());
         model.addAttribute("member",loginMember);
         members.add(loginMember.getUserId());
         try{
