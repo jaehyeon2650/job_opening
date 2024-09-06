@@ -25,6 +25,7 @@ public class TeamRepository {
     public Team getTeamById(Long id){
         return em.find(Team.class,id);
     }
+
     public Team getTeamByIdWithLeader(Long id){
         return query.selectFrom(team)
                 .join(team.leader).fetchJoin()
@@ -33,19 +34,20 @@ public class TeamRepository {
     }
 
     public void deleteTeam(Team team){
-        em.createQuery("update Member m set m.team=null where m.team.id=:teamId")
-                    .setParameter("teamId",team.getId())
-                    .executeUpdate();
-        for (Member member : team.getMembers()) {
-            member.setTeam(null);
-        }
-
+        resetTeamMembers(team);
         em.createQuery("delete from Team t where t.id=:teamId")
                 .setParameter("teamId",team.getId())
                 .executeUpdate();
-
         em.flush();
         em.clear();
     }
+    public void resetTeamMembers(Team team){
+        em.createQuery("update Member m set m.team=null where m.team.id=:teamId")
+                .setParameter("teamId",team.getId())
+                .executeUpdate();
 
+        for (Member member : team.getMembers()) {
+            member.setTeam(null);
+        }
+    }
 }

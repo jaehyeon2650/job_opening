@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>팀 조회</title>
+    <link th:href="@{/css/team.css}" href="../static/css/team.css" rel="stylesheet">
+</head>
+<body>
+<div class="team-container">
+    <form th:action method="post" class="team-form" th:object="${teamForm}">
+        <h2 class="team-title">팀 조회</h2>
+
+        <label for="name" class="team-label">팀 이름</label>
+        <input type="text" th:field="*{teamName}"  id="name" class="team-input" placeholder="팀 이름을 입력하세요." disabled >
+
+
+        <label for="leader" class="team-label">팀 주장</label>
+        <input type="text" th:field="*{leaderUserId}"  id="leader" class="team-input" disabled />
+
+
+        <label class="team-label">팀원</label>
+        <div id="members-container" class="members-container">
+            <div th:each="m:*{members}">
+                <input type="text" th:value="${m.userId}" class="team-input" disabled/>
+            </div>
+        </div>
+
+        <button th:if="${member.id==teamForm.leaderId}" type="button" class="add-member-button" th:onclick="|location.href='@{/team/{teamId}/edit (teamId=${teamForm.teamId})}'|" >팀 수정</button>
+        <button type="button" class="leave-team-button" th:onclick="|sendPostRequest('@{/member/{memberId}/team/{teamId}/delete?url=team (memberId=${member.Id},teamId=${teamForm.teamId})}')|">팀 탈퇴하기</button>
+        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    </form>
+</div>
+</body>
+<script>
+    function sendPostRequest(url) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</html>

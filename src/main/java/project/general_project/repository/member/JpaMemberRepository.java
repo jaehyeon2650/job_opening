@@ -4,6 +4,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import project.general_project.domain.Member;
+import project.general_project.domain.Team;
+import project.general_project.exception.UserHasTeamException;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +34,7 @@ public class JpaMemberRepository implements MemberRepository{
 
     @Override
     public Optional<Member> findByUserID(String userId){
-        List<Member> members = em.createQuery("select m from Member m where m.userId=:userId", Member.class).setParameter("userId", userId)
+        List<Member> members = em.createQuery("select m from Member m left join fetch m.team where m.userId=:userId", Member.class).setParameter("userId", userId)
                 .getResultList();
         return members.stream().findAny();
     }
@@ -48,6 +50,17 @@ public class JpaMemberRepository implements MemberRepository{
         return query.selectFrom(member)
                 .where(member.userId.in(ids))
                 .fetch();
+    }
+
+    @Override
+    public void setTeam(List<Long> ids, Team team) {
+        int count=em.createQuery("update Member m set m.team=:team where m.id in :list and m.team is null")
+                .setParameter("team",team)
+                .setParameter("list",ids)
+                .executeUpdate();
+        if(count!=ids.size()) throw new UserHasTeamException();
+        em.flush();
+        em.clear();
     }
 
 
