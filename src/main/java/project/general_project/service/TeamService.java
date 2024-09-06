@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamService {
+
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
@@ -50,7 +51,7 @@ public class TeamService {
     public void leaveTheTeam(Long memberId,Long teamId){
         Team team = teamRepository.getTeamById(teamId);
         if(team==null) throw new NoTeamException();
-        if(team.getLeader().getId()==memberId){
+        if(team.getLeader().getId().equals(memberId)){
             teamRepository.deleteTeam(team);
         }else{
             Member findMember = memberRepository.findByIdWithTeam(memberId);
