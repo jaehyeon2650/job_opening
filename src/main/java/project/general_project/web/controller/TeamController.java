@@ -59,15 +59,39 @@ public class TeamController {
         return "redirect:/";
     }
 
+    @GetMapping("/team/{teamId}")
+    public String teamForm(@Login Member member,@PathVariable Long teamId,Model model){
+        Member findMember = memberService.findByIdWithTeam(member.getId());
+        if(!findMember.getTeam().getId().equals(teamId)){
+            return "redirect:/";
+        }
+        Team team = teamService.findTeamById(teamId);
+        TeamForm teamForm=new TeamForm(team);
+        model.addAttribute("teamForm",teamForm);
+        model.addAttribute("member",member);
+        return "teamForm";
+    }
+
     @PostMapping("/member/{memberId}/team/{teamId}/delete")
-    public String leaveTeam(@PathVariable Long memberId, @PathVariable Long teamId, @Login Member member, RedirectAttributes redirectAttributes){
+    public String leaveTeam(@PathVariable Long memberId, @PathVariable Long teamId, @Login Member member, RedirectAttributes redirectAttributes, @RequestParam(defaultValue = "member") String url){
         if(member.getId()!=memberId) return "redirect:/";
         try{
             teamService.leaveTheTeam(memberId,teamId);
         }catch (NoTeamException e){
             return "redirect:/";
         }
-        redirectAttributes.addAttribute("memberId",memberId);
-        return "redirect:/member/{memberId}";
+        if(url.equals("member")){
+            redirectAttributes.addAttribute("memberId",memberId);
+            return "redirect:/member/{memberId}";
+        }
+        return "redirect:/";
+    }
+
+    private List<String> deleteBlank(List<String> members){
+        List<String> newMembers=new ArrayList<>();
+        for (String member : members) {
+            if(StringUtils.hasText(member)) newMembers.add(member);
+        }
+        return newMembers;
     }
 }
