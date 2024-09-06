@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import project.general_project.domain.LevelStatus;
 import project.general_project.domain.Member;
 import project.general_project.domain.Post;
+import project.general_project.service.MemberService;
 import project.general_project.service.PostService;
 import project.general_project.web.SessionConst;
 import project.general_project.web.form.memberForm.Login;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HomeController {
     private final PostService postService;
+    private final MemberService memberService;
 
     @GetMapping("/")
     public String home(@Login Member member, Model model, @ModelAttribute("postSearchForm") PostSearchForm postSearchForm, @RequestParam(name = "page",defaultValue = "1") Integer page,@RequestParam(name="level",required = false) String level){
@@ -35,7 +37,8 @@ public class HomeController {
         if(member==null){
             return "home";
         }
-        model.addAttribute("member",member);
+        Member findMember=memberService.findByIdWithTeam(member.getId());
+        model.addAttribute("member",findMember);
         return "loginHome";
     }
 
@@ -48,7 +51,8 @@ public class HomeController {
         if(member==null){
             return "redirect:/";
         }
-        model.addAttribute("member",member);
+        Member findMember=memberService.findByIdWithTeam(member.getId());
+        model.addAttribute("member",findMember);
         return "loginHome";
     }
 
