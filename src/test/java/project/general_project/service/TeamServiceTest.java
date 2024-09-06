@@ -57,11 +57,15 @@ class TeamServiceTest {
         list.add("d");
         Long teamId = teamService.makeTeam("asd", member1.getId(), list);
         Team findTeam = teamService.findTeamById(teamId);
+        Member findMember1 = memberRepository.findById(member1.getId());
+        Member findMember2 = memberRepository.findById(member2.getId());
+        Member findMember3 = memberRepository.findById(member3.getId());
+        Member findMember4 = memberRepository.findById(member4.getId());
         //then
-        assertThat(member1.getTeam().getId()).isEqualTo(teamId);
-        assertThat(member2.getTeam().getId()).isEqualTo(teamId);
-        assertThat(member3.getTeam().getId()).isEqualTo(teamId);
-        assertThat(member4.getTeam().getId()).isEqualTo(teamId);
+        assertThat(findMember1.getTeam().getId()).isEqualTo(teamId);
+        assertThat(findMember2.getTeam().getId()).isEqualTo(teamId);
+        assertThat(findMember3.getTeam().getId()).isEqualTo(teamId);
+        assertThat(findMember4.getTeam().getId()).isEqualTo(teamId);
         assertThat(findTeam).isNotNull();
     }
 

@@ -11,12 +11,14 @@ import project.general_project.exception.UserHasTeamException;
 import project.general_project.repository.member.MemberRepository;
 import project.general_project.repository.team.TeamRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamService {
+
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
@@ -27,11 +29,9 @@ public class TeamService {
         team.setLeader(memberRepository.findById(leaderId));
         List<Member> members = memberRepository.findMembersByUserId(memberUserIds);
         if(memberUserIds.size()!=members.size()) throw new NoUserException();
-        for (Member member : members) {
-            if(member.getTeam()!=null) throw new UserHasTeamException();
-            team.addMember(member);
-        }
+        List<Long> ids = makeMemberIdList(members);
         teamRepository.save(team);
+        memberRepository.setTeam(ids,team);
         return team.getId();
     }
 
@@ -50,7 +50,7 @@ public class TeamService {
     public void leaveTheTeam(Long memberId,Long teamId){
         Team team = teamRepository.getTeamById(teamId);
         if(team==null) throw new NoTeamException();
-        if(team.getLeader().getId()==memberId){
+        if(team.getLeader().getId().equals(memberId)){
             teamRepository.deleteTeam(team);
         }else{
             Member findMember = memberRepository.findByIdWithTeam(memberId);
@@ -60,5 +60,26 @@ public class TeamService {
                 teamRepository.deleteTeam(team);
             }
         }
+    }
+
+    @Transactional
+    public void updateTeam(Long teamId,String teamName, List<String> members){
+        Team team = teamRepository.getTeamById(teamId);
+        teamRepository.resetTeamMembers(team);
+        team.setName(teamName);
+        List<Member> memberList = memberRepository.findMembersByUserId(members);
+        if(members.size()!=memberList.size()){
+            throw new NoUserException();
+        }
+        List<Long> ids = makeMemberIdList(memberList);
+        memberRepository.setTeam(ids,team);
+    }
+
+    private List<Long> makeMemberIdList(List<Member> members){
+        List<Long> list=new ArrayList<>();
+        members.forEach(o->{
+            list.add(o.getId());
+        });
+        return list;
     }
 }
