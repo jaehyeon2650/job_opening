@@ -72,6 +72,40 @@ public class TeamController {
         return "teamForm";
     }
 
+    @GetMapping("/team/{teamId}/edit")
+    public String editTeamForm(@Login Member member,@PathVariable Long teamId,Model model){
+        Member findMember = memberService.findByIdWithTeam(member.getId());
+        if(!findMember.getTeam().getId().equals(teamId)){
+            return "redirect:/";
+        }
+        Team team = teamService.findTeamById(teamId);
+        EditTeamForm editTeamForm=new EditTeamForm(team);
+        model.addAttribute("editTeamForm",editTeamForm);
+        model.addAttribute("member",member);
+        return "editTeamForm";
+    }
+
+    @PostMapping("/team/{teamId}/edit")
+    public String editTeam(@Login Member member, @Validated @ModelAttribute("editTeamForm") EditTeamForm editTeamForm,BindingResult bindingResult,@PathVariable Long teamId,RedirectAttributes redirectAttributes,Model model){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("member",member);
+            return "editTeamForm";
+        }
+        if(!member.getUserId().equals(editTeamForm.getLeaderUserId())) return "redirect:/";
+        List<String> members = deleteBlank(editTeamForm.getMembers());
+        try{
+            teamService.updateTeam(teamId,editTeamForm.getTeamName(),members);
+        }catch(NoUserException e){
+            bindingResult.rejectValue("members","user");
+            return "editTeamForm";
+        }catch(UserHasTeamException e){
+            bindingResult.rejectValue("members","team");
+            return "editTeamForm";
+        }
+        redirectAttributes.addAttribute("teamId",teamId);
+        return "redirect:/team/{teamId}";
+    }
+
     @PostMapping("/member/{memberId}/team/{teamId}/delete")
     public String leaveTeam(@PathVariable Long memberId, @PathVariable Long teamId, @Login Member member, RedirectAttributes redirectAttributes, @RequestParam(defaultValue = "member") String url){
         if(member.getId()!=memberId) return "redirect:/";
