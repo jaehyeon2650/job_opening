@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Alarm;
+import project.general_project.domain.Member;
 import project.general_project.repository.alarm.AlarmRepository;
+import project.general_project.repository.member.MemberRepository;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AlarmService {
+
+    private final MemberRepository memberRepository;
     private final AlarmRepository repository;
 
     public Alarm findAlarmById(Long id){
@@ -28,4 +32,23 @@ public class AlarmService {
         findAlarm.setRead(true);
     }
 
+    @Transactional
+    public Long save(Alarm alarm){
+        repository.save(alarm);
+        return alarm.getId();
+    }
+    @Transactional
+    public Long makeAlarmWithMember(Member member,String content){
+        Alarm alarm=new Alarm(member,content);
+        repository.save(alarm);
+        return alarm.getId();
+    }
+
+    @Transactional
+    public Long makeAlarmWithMemberUserId(String userId,String content){
+        Member member = memberRepository.findByUserID(userId).get();
+        Alarm alarm=new Alarm(member,content);
+        repository.save(alarm);
+        return alarm.getId();
+    }
 }
