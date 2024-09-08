@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import project.general_project.domain.Alarm;
 import project.general_project.domain.Member;
 import project.general_project.domain.Team;
 import project.general_project.exception.NoUserException;
+import project.general_project.repository.alarm.AlarmRepository;
 import project.general_project.repository.member.MemberRepository;
 import project.general_project.repository.team.TeamRepository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +36,8 @@ class TeamServiceTest {
     TeamRepository teamRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    AlarmRepository alarmRepository;
 
     @Test
     public void 팀_생성() throws Exception{
@@ -185,5 +190,153 @@ class TeamServiceTest {
         //then
         assertThat(findTeam).isNull();
         assertThat(findMember.getTeam()).isNull();
+    }
+
+    @Test
+    public void 팀_삭제_알람() throws Exception{
+        //given
+        Member member1 = new Member();
+        Member member2 = new Member();
+        Team team=new Team();
+        em.persist(member1);
+        em.persist(member2);
+        team.addMember(member1);
+        team.addMember(member2);
+        em.persist(team);
+        //when
+        teamService.deleteTeam(team.getId());
+        List<Alarm> Member1Alarm = alarmRepository.findAlarmsByMemberId(member1.getId());
+        List<Alarm> Member2Alarm = alarmRepository.findAlarmsByMemberId(member2.getId());
+        //then
+        assertThat(Member1Alarm.size()).isEqualTo(1);
+        assertThat(Member2Alarm.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 팀_탈퇴_알람() throws Exception{
+        //given
+        Member member1 = new Member();
+        Member member2 = new Member();
+        Member member3 = new Member();
+        Team team=new Team();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.setLeader(member2);
+        em.persist(team);
+        //when
+        teamService.leaveTheTeam(member1.getId(),team.getId());
+        List<Alarm> Member1Alarm = alarmRepository.findAlarmsByMemberId(member1.getId());
+        List<Alarm> Member2Alarm = alarmRepository.findAlarmsByMemberId(member2.getId());
+        List<Alarm> Member3Alarm = alarmRepository.findAlarmsByMemberId(member3.getId());
+        //then
+        assertThat(Member1Alarm.size()).isEqualTo(0);
+        assertThat(Member2Alarm.size()).isEqualTo(1);
+        assertThat(Member3Alarm.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 리더가_팀_탈퇴_알람() throws Exception{
+        //given
+        Member member1 = new Member();
+        Member member2 = new Member();
+        Member member3 = new Member();
+        Team team=new Team();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.setLeader(member1);
+        em.persist(team);
+        //when
+        teamService.leaveTheTeam(member1.getId(),team.getId());
+        List<Alarm> Member1Alarm = alarmRepository.findAlarmsByMemberId(member1.getId());
+        List<Alarm> Member2Alarm = alarmRepository.findAlarmsByMemberId(member2.getId());
+        List<Alarm> Member3Alarm = alarmRepository.findAlarmsByMemberId(member3.getId());
+        //then
+        assertThat(Member1Alarm.size()).isEqualTo(1);
+        assertThat(Member2Alarm.size()).isEqualTo(1);
+        assertThat(Member3Alarm.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 혼자_팀에_있을_때_탈퇴() throws Exception{
+        //given
+        Member member1 = new Member();
+        Team team=new Team();
+        em.persist(member1);
+        team.addMember(member1);
+        team.setLeader(member1);
+        em.persist(team);
+        //when
+        teamService.leaveTheTeam(member1.getId(),team.getId());
+        List<Alarm> Member1Alarm = alarmRepository.findAlarmsByMemberId(member1.getId());
+        //then
+        assertThat(Member1Alarm.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 팀_생성_알람() throws Exception{
+        //given
+        Member member1=new Member();
+        member1.setUserId("a");
+        Member member2=new Member();
+        member2.setUserId("b");
+        Member member3=new Member();
+        member3.setUserId("c");
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        List<String> memberIds=List.of("a","b","c");
+        //when
+        Long teamId = teamService.makeTeam("spring", member1.getId(), memberIds);
+        List<Alarm> member1Alarms = alarmRepository.findAlarmsByMemberId(member1.getId());
+        List<Alarm> member2Alarms = alarmRepository.findAlarmsByMemberId(member2.getId());
+        List<Alarm> member3Alarms = alarmRepository.findAlarmsByMemberId(member3.getId());
+        //then
+        assertThat(member1Alarms.size()).isEqualTo(1);
+        assertThat(member2Alarms.size()).isEqualTo(1);
+        assertThat(member3Alarms.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 팀_변경_알림() throws Exception{
+        //given
+        Member member1 = new Member();
+        member1.setUserId("a");
+        Member member2 = new Member();
+        member2.setUserId("b");
+        Member member3 = new Member();
+        member3.setUserId("c");
+        Member member4 = new Member();
+        member4.setUserId("d");
+        Team team=new Team();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        em.persist(member4);
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.setLeader(member1);
+        em.persist(team);
+        //when
+        List<String> newMembers=List.of("a","b","d");
+        teamService.updateTeam(team.getId(),"asd",newMembers);
+        List<Alarm> member1Alarms = alarmRepository.findAlarmsByMemberId(member1.getId());
+        List<Alarm> member2Alarms = alarmRepository.findAlarmsByMemberId(member2.getId());
+        List<Alarm> member3Alarms = alarmRepository.findAlarmsByMemberId(member3.getId());
+        List<Alarm> member4Alarms = alarmRepository.findAlarmsByMemberId(member4.getId());
+
+        //then
+        assertThat(member1Alarms.size()).isEqualTo(2);
+        assertThat(member2Alarms.size()).isEqualTo(2);
+        assertThat(member3Alarms.size()).isEqualTo(1);
+        assertThat(member4Alarms.size()).isEqualTo(1);
     }
 }
