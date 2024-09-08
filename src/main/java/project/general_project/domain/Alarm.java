@@ -17,4 +17,13 @@ public class Alarm {
     @JoinColumn(name = "member_id")
     private Member member;
     private LocalDateTime time;
+
+    public Alarm() {}
+
+    public Alarm(Member member, String content){
+        this.member=member;
+        this.content=content;
+        this.time=LocalDateTime.now();
+        this.read=false;
+    }
 }
