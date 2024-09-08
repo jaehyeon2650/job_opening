@@ -7,7 +7,6 @@ import project.general_project.domain.Member;
 import project.general_project.domain.Team;
 import project.general_project.exception.NoTeamException;
 import project.general_project.exception.NoUserException;
-import project.general_project.exception.UserHasTeamException;
 import project.general_project.repository.member.MemberRepository;
 import project.general_project.repository.team.TeamRepository;
 
@@ -66,11 +65,7 @@ public class TeamService {
     public void updateTeam(Long teamId,String teamName, List<String> members){
         Team team = teamRepository.getTeamById(teamId);
         teamRepository.resetTeamMembers(team);
-        team.setName(teamName);
         List<Member> memberList = memberRepository.findMembersByUserId(members);
-        if(members.size()!=memberList.size()){
-            throw new NoUserException();
-        }
         List<Long> ids = makeMemberIdList(memberList);
         memberRepository.setTeam(ids,team);
     }
