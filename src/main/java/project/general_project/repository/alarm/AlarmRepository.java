@@ -35,10 +35,16 @@ public class AlarmRepository {
                     orderBy(alarm.time.desc())
                         .fetch();
     }
+
     public Long notReadCount(Long id){
         return query.select(alarm.count()).from(alarm)
                 .where(alarm.member.id.eq(id).and(alarm.readCheck.isFalse()))
                 .fetch().get(0);
     }
 
+    public void changeReadStateAll(Long id){
+       em.createQuery("update Alarm a set a.readCheck=true where a.member.id=:id")
+                .setParameter("id",id)
+                .executeUpdate();
+    }
 }
