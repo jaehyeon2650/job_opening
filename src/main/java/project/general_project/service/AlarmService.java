@@ -29,7 +29,12 @@ public class AlarmService {
     @Transactional
     public void changeReadState(Long id){
         Alarm findAlarm = repository.findById(id);
-        findAlarm.setRead(true);
+        findAlarm.setReadCheck(true);
+    }
+
+    @Transactional
+    public void changeReadStateAll(Long id){
+        repository.changeReadStateAll(id);
     }
 
     @Transactional
@@ -50,5 +55,9 @@ public class AlarmService {
         Alarm alarm=new Alarm(member,content);
         repository.save(alarm);
         return alarm.getId();
+    }
+
+    public Long getNotReadCount(Long id){
+        return repository.notReadCount(id);
     }
 }
