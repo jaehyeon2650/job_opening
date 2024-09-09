@@ -31,6 +31,8 @@ public class AlarmRepository {
 
     public List<Alarm> findAlarmsByMemberId(Long id){
         return query.selectFrom(alarm)
-                .where(alarm.member.id.eq(id)).fetch();
+                .where(alarm.member.id.eq(id)).
+                    orderBy(alarm.time.desc())
+                        .fetch();
     }
 }
