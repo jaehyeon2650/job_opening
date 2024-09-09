@@ -15,6 +15,7 @@
         <button th:onclick="|location.href='@{/{id}/post/new (id=${member.id})}'|" class="btn">게시글 작성</button>
         <button th:if="${member.team == null}" th:onclick="|location.href='@{/team/new}'|" class="btn">팀 생성</button>
         <button th:if="${member.team != null}" th:onclick="|location.href='@{/team/{teamId} (teamId=${member.team.id})}'|" class="btn">팀 조회</button>
+        <button th:onclick="|location.href='@{/member/{id}/alarm (id=${member.id})}'|" class="btn">소식</button>
     </div>
 </header>
 <div class="search-container">

@@ -32,6 +32,11 @@ public class TeamRepository {
                 .where(team.id.eq(id)).fetchOne();
 
     }
+    public Team getTeamByIdWithMembers(Long id){
+        return query.selectFrom(team)
+                .leftJoin(team.members).fetchJoin()
+                .where(team.id.eq(id)).fetchOne();
+    }
 
     public void deleteTeam(Team team){
         resetTeamMembers(team);

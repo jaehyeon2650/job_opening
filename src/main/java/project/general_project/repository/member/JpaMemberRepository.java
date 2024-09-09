@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import project.general_project.domain.Member;
 import project.general_project.domain.Team;
+import project.general_project.exception.NoUserException;
 import project.general_project.exception.UserHasTeamException;
 
 import java.util.List;
@@ -47,9 +48,11 @@ public class JpaMemberRepository implements MemberRepository{
 
     @Override
     public List<Member> findMembersByUserId(List<String> ids) {
-        return query.selectFrom(member)
+        List<Member> members = query.selectFrom(member)
                 .where(member.userId.in(ids))
                 .fetch();
+        if(members.size()!=ids.size()) throw new NoUserException();
+        return members;
     }
 
     @Override
