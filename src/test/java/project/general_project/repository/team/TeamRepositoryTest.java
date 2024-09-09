@@ -143,4 +143,40 @@ class TeamRepositoryTest {
         //then
         assertThat(findTeam.getLeader().getId()).isEqualTo(member1.getId());
     }
+
+    @Test
+    public void 팀원들과_함께_팀_조회1() throws Exception{
+        //given
+        Team team=new Team();
+        Member member1=new Member();
+        Member member2=new Member();
+        Member member3=new Member();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        teamRepository.save(team);
+        em.flush();
+        em.clear();
+        //when
+        System.out.println("===================");
+        Team findTeam = teamRepository.getTeamByIdWithMembers(team.getId());
+        //then
+        assertThat(findTeam.getMembers().size()).isEqualTo(3);
+    }
+
+    @Test
+    public void 팀원들과_함께_팀_조회2() throws Exception{
+        //given
+        Team team=new Team();
+        teamRepository.save(team);
+        em.flush();
+        em.clear();
+        //when
+        Team findTeam = teamRepository.getTeamByIdWithMembers(team.getId());
+        //then
+        assertThat(findTeam.getMembers().size()).isEqualTo(0);
+    }
 }

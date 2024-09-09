@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>소식</title>
+    <link th:href="@{/css/alarm.css}" href="../static/css/alarm.css" rel="stylesheet">
+</head>
+<body>
+<div class="alarm-container">
+    <h1 class="alarm-title">소식</h1>
+        <div th:if="${alarmForms.size()==0}" th:text="|최근 소식이 없습니다!|" class="no-alarms"></div>
+        <div th:if="${alarmForms.size()}!=0" class="alarm-header">
+            <p th:text="|읽지 않은 알람 개수 : ${count}|" class="alarm-count"></p>
+            <p th:text="|모두 읽음으로 표시|" class="mark-read-button" th:onclick="|sendPostRequest('@{/member/{id}/alarm/edit (id=${memberId})}')|"></p>
+        </div>
+        <div th:if="${alarmForms.size()!=0}" th:each="alarmForm:${alarmForms}" class="alarm-item">
+            <p th:text="${alarmForm.content}" class="alarm-message"></p>
+            <p th:text="${#temporals.format(alarmForm.time, 'yyyy-MM-dd HH:mm')}" class="alarm-meta"></p>
+            <p th:text="${alarmForm.read==false}?'읽지 않음':'읽음'" class="alarm-meta"></p>
+        </div>
+    <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+</div>
+</body>
+<script>
+    function sendPostRequest(url) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</html>
