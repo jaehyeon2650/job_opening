@@ -1,0 +1,108 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.alarm-container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.alarm-title {
+    font-size: 24px;
+    margin-bottom: 1rem;
+    color: #000000;
+}
+
+.alarm-message {
+    margin-top: 1rem;
+    font-size: 16px;
+    color: #555555;
+    text-align: left;
+    width: 100%;
+}
+
+.alarm-meta {
+    font-size: 14px;
+    color: #777777;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.alarm-button, .home-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.alarm-button:hover, .home-button:hover {
+    background-color: #0056b3;
+}
+
+.no-alarms {
+    font-size: 18px;
+    color: #888888;
+    margin-top: 1.5rem;
+}
+
+.unread {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+.alarm-item {
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 70%;
+    text-align: left;
+}
+
+.alarm-meta {
+    margin-left: 0;
+}
+
+.alarm-header {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    margin-bottom: 1rem;
+}
+
+.alarm-count {
+    font-size: 16px;
+    color: #555555;
+}
+
+.mark-read-button {
+    font-size: 16px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.mark-read-button:hover {
+    text-decoration: underline;
+}
+
+
