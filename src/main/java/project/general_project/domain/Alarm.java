@@ -12,7 +12,7 @@ public class Alarm {
     @Id @GeneratedValue
     private Long id;
     private String content;
-    private boolean read;
+    private boolean readCheck;
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -24,6 +24,6 @@ public class Alarm {
         this.member=member;
         this.content=content;
         this.time=LocalDateTime.now();
-        this.read=false;
+        this.readCheck=false;
     }
 }
