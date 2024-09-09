@@ -56,5 +56,61 @@ class AlarmRepositoryTest {
         assertThat(findAlarms2.size()).isEqualTo(0);
     }
 
+    @Test
+    public void 읽지_않음_수_조회() throws Exception{
+        //given
+        Member member1=new Member();
+        em.persist(member1);
+        Alarm alarm1=new Alarm();
+        Alarm alarm2=new Alarm();
+        alarm1.setMember(member1);
+        alarm1.setReadCheck(true);
+        alarm2.setMember(member1);
+        alarm2.setReadCheck(false);
+        repository.save(alarm1);
+        repository.save(alarm2);
+        //when
+        Long count = repository.notReadCount(member1.getId());
+        //then
+        assertThat(count).isEqualTo(1);
+    }
 
+    @Test
+    public void 읽지_않음_수_조회2() throws Exception{
+        //given
+        Member member1=new Member();
+        em.persist(member1);
+        Alarm alarm1=new Alarm();
+        Alarm alarm2=new Alarm();
+        alarm1.setMember(member1);
+        alarm1.setReadCheck(true);
+        alarm2.setMember(member1);
+        alarm2.setReadCheck(true);
+        repository.save(alarm1);
+        repository.save(alarm2);
+        //when
+        Long count = repository.notReadCount(member1.getId());
+        //then
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    public void 읽음으로_상태_변화() throws Exception{
+        //given
+        Member member1=new Member();
+        em.persist(member1);
+        Alarm alarm1=new Alarm();
+        Alarm alarm2=new Alarm();
+        alarm1.setMember(member1);
+        alarm1.setReadCheck(false);
+        alarm2.setMember(member1);
+        alarm2.setReadCheck(false);
+        repository.save(alarm1);
+        repository.save(alarm2);
+        //when
+        repository.changeReadStateAll(member1.getId());
+        Long count = repository.notReadCount(member1.getId());
+        //then
+        assertThat(count).isEqualTo(0);
+    }
 }
