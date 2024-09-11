@@ -29,7 +29,7 @@ public class TeamService {
         team.setLeader(memberRepository.findById(leaderId));
         List<Member> members = memberRepository.findMembersByUserId(memberUserIds);
         for (Member member : members) {
-            alarmService.makeAlarmWithMember(member,team.getName()+" 팀에 합류했습니다.");
+            alarmService.makeAlarmWithMember(member,null,team.getName()+" 팀에 합류했습니다.");
         }
         if(memberUserIds.size()!=members.size()) throw new NoUserException();
         List<Long> ids = makeMemberIdList(members);
@@ -41,7 +41,8 @@ public class TeamService {
     @Transactional
     public void deleteTeam(Long teamId){
         Team findTeam = teamRepository.getTeamByIdWithMembers(teamId);
-        alarmAfterUpdateTeam(findTeam.getMembers(),findTeam.getName()+"의 팀이 해체되었습니다.");
+        alarmAfterDeleteTeam(findTeam.getMembers());
+        alarmAfterUpdateTeam(findTeam.getMembers(),-1L,findTeam.getName()+"의 팀이 해체되었습니다.");
         teamRepository.deleteTeam(findTeam);
     }
 
@@ -55,17 +56,18 @@ public class TeamService {
         Team team = teamRepository.getTeamByIdWithMembers(teamId);
         if(team==null) throw new NoTeamException();
         if(team.getLeader().getId().equals(memberId)){
-            alarmAfterUpdateTeam(team.getMembers(),team.getName()+"의 팀이 해체되었습니다.");
+            alarmAfterDeleteTeam(team.getMembers());
+            alarmAfterUpdateTeam(team.getMembers(),null,team.getName()+"의 팀이 해체되었습니다.");
             teamRepository.deleteTeam(team);
         }else{
             Member findMember = memberRepository.findByIdWithTeam(memberId);
             findMember.setTeam(null);
             team.getMembers().removeIf(member -> member.getId()==memberId);
             if(team.getMembers().isEmpty()){
-                alarmAfterUpdateTeam(team.getMembers(),team.getName()+"의 팀이 해체되었습니다.");
+                alarmAfterUpdateTeam(team.getMembers(),null,team.getName()+"의 팀이 해체되었습니다.");
                 teamRepository.deleteTeam(team);
             }else{
-                alarmAfterUpdateTeam(team.getMembers(),findMember.getUserId()+"님이 탈퇴하셨습니다.");
+                alarmAfterUpdateTeam(team.getMembers(),findMember.getId(),findMember.getUserId()+"님이 탈퇴하셨습니다.");
             }
         }
     }
@@ -75,16 +77,16 @@ public class TeamService {
         List<Member> outMembers=getOutMembers(members,team);
         List<Member> stayMembers=getStayMembers(members,team);
         team.setName(teamName);
-        alarmAfterUpdateTeam(outMembers,"팀에서 강제 퇴장 당하셨습니다.");
+        alarmAfterUpdateTeam(outMembers,null,"팀에서 강제 퇴장 당하셨습니다.");
         boolean newMember= members.size() != stayMembers.size();
         for (Member outMember : outMembers) {
-            alarmAfterUpdateTeam(stayMembers,outMember.getUserId()+"님이 탈퇴하셨습니다.");
-            if(newMember) alarmAfterUpdateTeam(stayMembers,"새로운 맴버가 들어왔습니다.");
+            alarmAfterUpdateTeam(stayMembers,outMember.getId(),outMember.getUserId()+"님이 탈퇴하셨습니다.");
+            if(newMember) alarmAfterUpdateTeam(stayMembers,null,"새로운 맴버가 들어왔습니다.");
         }
         if(newMember){
             List<String> newMemberIds = getNewMemberIds(members, stayMembers);
             for (String newMemberId : newMemberIds) {
-                alarmService.makeAlarmWithMemberUserId(newMemberId,team.getName()+" 팀에 합류하였습니다.");
+                alarmService.makeAlarmWithMemberUserId(newMemberId,null,team.getName()+" 팀에 합류하였습니다.");
             }
 
         }
@@ -94,9 +96,18 @@ public class TeamService {
         memberRepository.setTeam(ids,team);
     }
 
-    private void alarmAfterUpdateTeam(List<Member> members,String content){
+    private void alarmAfterUpdateTeam(List<Member> members,Long fromMember,String content){
         for (Member member : members) {
-            alarmService.makeAlarmWithMember(member,content);
+            alarmService.makeAlarmWithMember(member,fromMember,content);
+        }
+    }
+
+    private void alarmAfterDeleteTeam(List<Member> members){
+        for (Member toMember : members) {
+            for (Member fromMember : members) {
+                if(toMember.getId().equals(fromMember.getId())) continue;
+                alarmService.makeAlarmWithMember(toMember,fromMember.getId(),fromMember.getUserId()+"님이 탈퇴하셨습니다.");
+            }
         }
     }
 

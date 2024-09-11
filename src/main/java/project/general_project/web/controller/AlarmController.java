@@ -43,4 +43,12 @@ public class AlarmController {
         redirectAttributes.addAttribute("id",id);
         return "redirect:/member/{id}/alarm";
     }
+
+    @PostMapping("/member/{id}/alarm/delete")
+    public String deleteAlarm(@Login Member member,@PathVariable Long id,RedirectAttributes redirectAttributes){
+        if(!member.getId().equals(id)) return "redirect:/";
+        alarmService.deleteAlarm(id);
+        redirectAttributes.addAttribute("id",id);
+        return "redirect:/member/{id}/alarm";
+    }
 }

@@ -1,0 +1,103 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.assessment-container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.assessment-form {
+    width: 80%;
+}
+
+.assessment-title {
+    font-size: 24px;
+    margin-bottom: 1rem;
+    color: #000000;
+}
+
+.assessment-label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.assessment-input, .assessment-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333333;
+    box-sizing: border-box;
+}
+
+.assessment-input:focus, .assessment-textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.assessment-textarea {
+    height: 200px;
+    resize: vertical;
+}
+
+.assessment-button, .assessment-home-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.assessment-button:hover, .assessment-home-button:hover {
+    background-color: #0056b3;
+}
+
+.assessment-error {
+    color: red;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.home-button{
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.error {
+    color: red;
+    margin-bottom: 3px;
+    font-size: 10px;
+}

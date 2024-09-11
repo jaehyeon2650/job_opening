@@ -14,23 +14,19 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.general_project.domain.Address;
-import project.general_project.domain.Member;
-import project.general_project.domain.Picture;
-import project.general_project.domain.Post;
-import project.general_project.service.LoginService;
-import project.general_project.service.MemberService;
-import project.general_project.service.PictureStore;
-import project.general_project.service.PostService;
+import project.general_project.domain.*;
+import project.general_project.service.*;
 import project.general_project.validation.EditValidator;
 import project.general_project.validation.JoinValidator;
 
 import project.general_project.web.SessionConst;
+import project.general_project.web.form.assessmentForm.AssessmentForm;
 import project.general_project.web.form.memberForm.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -39,8 +35,11 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
+    private final AssessmentService assessmentService;
     private final PictureStore pictureStore;
     private final PostService postService;
+
+
     private final JoinValidator joinValidator;
     private final EditValidator editValidator;
 
@@ -147,9 +146,10 @@ public class MemberController {
         Member findMember = memberService.findByIdWithTeam(id);
         List<Post> posts = postService.findByMemberId(id);
         MemberForm memberForm=null;
+        double score=assessmentService.getAverage(id);
         if(findMember.getPicture()==null){
-            memberForm=new MemberForm(findMember,posts,null);
-        }else memberForm=new MemberForm(findMember,posts,findMember.getPicture().getSaveName());
+            memberForm=new MemberForm(findMember,posts,null,score);
+        }else memberForm=new MemberForm(findMember,posts,findMember.getPicture().getSaveName(),score);
         model.addAttribute("memberForm",memberForm);
         model.addAttribute("loginMember",loginMember);
         return "memberForm";
@@ -159,5 +159,19 @@ public class MemberController {
     @GetMapping("/images/{savedFile}")
     public Resource getImage(@PathVariable("savedFile") String savedFile) throws MalformedURLException {
         return new UrlResource("file:"+pictureStore.getFullPath(savedFile));
+    }
+
+    @GetMapping("/member/{id}/assessment")
+    public String getAssessments(@PathVariable Long id,Model model){
+        List<Assessment> assessments = assessmentService.getAllAssessment(id);
+        List<AssessmentForm> forms = assessments.stream().map(o -> {
+            return new AssessmentForm(null, o.getContent(), o.getScore(), o.getFromMember().getUserId());
+        }).collect(Collectors.toList());
+
+        model.addAttribute("forms",forms);
+        double average = assessmentService.getAverage(id);
+        model.addAttribute("score",average);
+        model.addAttribute("id",id);
+        return "assessmentForm";
     }
 }

@@ -22,6 +22,14 @@
 
         </div>
 
+        <div>
+            <label for="score" class="join-label">프로젝트 점수</label>
+            <div class="score-detail">
+                <input type="text" th:field="*{score}" id="score" disabled class="join-input"/>
+                <p class="detail-link" th:text="|자세한 평가 보러가기|" th:onclick="|location.href='@{/member/{id}/assessment (id=${memberForm.id})}'|"></p>
+            </div>
+        </div>
+
         <label th:if="${loginMember.id == memberForm.id}" for="firstPhone" class="join-label">핸드폰 번호</label>
         <div th:if="${loginMember.id == memberForm.id}" class="phone-input-group">
             <input type="number" th:field="*{firstPhone}" id="firstPhone" class="phone-input" placeholder="010" maxlength="3" disabled />
