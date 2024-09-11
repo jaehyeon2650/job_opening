@@ -43,16 +43,16 @@ public class AlarmService {
         return alarm.getId();
     }
     @Transactional
-    public Long makeAlarmWithMember(Member member,String content){
-        Alarm alarm=new Alarm(member,content);
+    public Long makeAlarmWithMember(Member member,Long fromMemberId,String content){
+        Alarm alarm=new Alarm(member,fromMemberId,content);
         repository.save(alarm);
         return alarm.getId();
     }
 
     @Transactional
-    public Long makeAlarmWithMemberUserId(String userId,String content){
+    public Long makeAlarmWithMemberUserId(String userId,Long fromMemberId,String content){
         Member member = memberRepository.findByUserID(userId).get();
-        Alarm alarm=new Alarm(member,content);
+        Alarm alarm=new Alarm(member,fromMemberId,content);
         repository.save(alarm);
         return alarm.getId();
     }
