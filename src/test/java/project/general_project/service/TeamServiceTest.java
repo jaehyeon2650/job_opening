@@ -339,4 +339,64 @@ class TeamServiceTest {
         assertThat(member3Alarms.size()).isEqualTo(1);
         assertThat(member4Alarms.size()).isEqualTo(1);
     }
+
+    @Test
+    public void 팀_삭제_알림() throws Exception{
+        //given
+        Member member1 = new Member();
+        member1.setUserId("a");
+        Member member2 = new Member();
+        member2.setUserId("b");
+        Member member3 = new Member();
+        member3.setUserId("c");
+        Team team=new Team();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.setLeader(member1);
+        em.persist(team);
+        //when
+        teamService.deleteTeam(team.getId());
+        List<Alarm> member1Alarm = alarmRepository.findAlarmsByMemberId(member1.getId());
+        List<Alarm> member2Alarm = alarmRepository.findAlarmsByMemberId(member2.getId());
+        List<Alarm> member3Alarm = alarmRepository.findAlarmsByMemberId(member3.getId());
+        //then
+        assertThat(member1Alarm.size()).isEqualTo(3);
+        assertThat(member1Alarm.get(0).getContent()).isNotNull();
+        assertThat(member2Alarm.size()).isEqualTo(3);
+        assertThat(member3Alarm.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void 리더_탈퇴로_팀_해체_메시지() throws Exception{
+        //given
+        Member member1 = new Member();
+        member1.setUserId("a");
+        Member member2 = new Member();
+        member2.setUserId("b");
+        Member member3 = new Member();
+        member3.setUserId("c");
+        Team team=new Team();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        team.addMember(member1);
+        team.addMember(member2);
+        team.addMember(member3);
+        team.setLeader(member1);
+        em.persist(team);
+        //when
+        teamService.leaveTheTeam(member1.getId(),team.getId());
+        List<Alarm> member1Alarm = alarmRepository.findAlarmsByMemberId(member1.getId());
+        List<Alarm> member2Alarm = alarmRepository.findAlarmsByMemberId(member2.getId());
+        List<Alarm> member3Alarm = alarmRepository.findAlarmsByMemberId(member3.getId());
+        //then
+        assertThat(member1Alarm.size()).isEqualTo(3);
+        assertThat(member2Alarm.size()).isEqualTo(3);
+        assertThat(member3Alarm.size()).isEqualTo(3);
+        assertThat(member1Alarm.get(0).getFromMemberId()).isNull();
+    }
 }
