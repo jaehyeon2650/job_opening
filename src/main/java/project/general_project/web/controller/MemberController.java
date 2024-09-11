@@ -20,11 +20,13 @@ import project.general_project.validation.EditValidator;
 import project.general_project.validation.JoinValidator;
 
 import project.general_project.web.SessionConst;
+import project.general_project.web.form.assessmentForm.AssessmentForm;
 import project.general_project.web.form.memberForm.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -33,6 +35,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
+    private final AssessmentService assessmentService;
     private final PictureStore pictureStore;
     private final PostService postService;
 
@@ -156,5 +159,19 @@ public class MemberController {
     @GetMapping("/images/{savedFile}")
     public Resource getImage(@PathVariable("savedFile") String savedFile) throws MalformedURLException {
         return new UrlResource("file:"+pictureStore.getFullPath(savedFile));
+    }
+
+    @GetMapping("/member/{id}/assessment")
+    public String getAssessments(@PathVariable Long id,Model model){
+        List<Assessment> assessments = assessmentService.getAllAssessment(id);
+        List<AssessmentForm> forms = assessments.stream().map(o -> {
+            return new AssessmentForm(null, o.getContent(), o.getScore(), o.getFromMember().getUserId());
+        }).collect(Collectors.toList());
+
+        model.addAttribute("forms",forms);
+        double average = assessmentService.getAverage(id);
+        model.addAttribute("score",average);
+        model.addAttribute("id",id);
+        return "assessmentForm";
     }
 }
