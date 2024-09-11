@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>평가 하기</title>
+    <link th:href="@{/css/assessment.css}" href="../static/css/assessment.css" rel="stylesheet">
+</head>
+<body>
+<div class="assessment-container">
+    <form th:action method="post" th:object="${assessmentForm}" class="assessment-form">
+        <h2 class="assessment-title">평가글 작성</h2>
+
+        <label for="fromMemberId" class="assessment-label">작성자</label>
+        <input type="text" th:field="*{fromMemberId}" id="fromMemberId" disabled class="assessment-input">
+        <input type="hidden" th:value="*{fromMemberId}" name="fromMemberId">
+
+        <label for="toMemberId" class="assessment-label">대상</label>
+        <input type="text" th:field="*{toMemberId}" id="toMemberId" disabled class="assessment-input">
+        <input type="hidden" th:value="*{toMemberId}" name="toMemberId">
+
+        <label for="score" class="assessment-label">점수( 1 ~ 10점 사이 )</label>
+        <input type="number" min="0" max="10" th:field="*{score}" id="score" class="assessment-input">
+        <p th:errors="*{score}" class="error"></p>
+
+        <label for="content" class="assessment-label">평가</label>
+        <textarea th:field="*{content}" id="content" placeholder="내용을 입력하세요" class="assessment-textarea"></textarea>
+        <p th:errors="*{content}" class="error"></p>
+
+        <button type="submit" class="assessment-button">저장하기</button>
+        <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
+    </form>
+</div>
+</body>
+</html>

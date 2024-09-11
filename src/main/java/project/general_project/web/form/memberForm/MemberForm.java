@@ -21,10 +21,12 @@ public class MemberForm {
     private String city;
     private String detailAddress;
     private String teamName;
+    private double score;
     private Long teamId;
     private List<PostDto> posts=new ArrayList<>();
     private String savedPath;
-    public MemberForm(Member member, List<Post> posts,String savedPath) {
+    public MemberForm(Member member, List<Post> posts,String savedPath,double score) {
+        this.score=score;
         this.id=member.getId();
         this.username = member.getUsername();
         String phone = member.getPhone();

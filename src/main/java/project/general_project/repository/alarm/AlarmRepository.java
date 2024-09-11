@@ -47,4 +47,9 @@ public class AlarmRepository {
                 .setParameter("id",id)
                 .executeUpdate();
     }
+
+    public void deleteAll(Long id){
+        em.createQuery("delete from Alarm a where a.member.id=:id")
+                .setParameter("id",id).executeUpdate();
+    }
 }

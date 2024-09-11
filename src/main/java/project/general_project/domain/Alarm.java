@@ -16,13 +16,15 @@ public class Alarm {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+    private Long fromMemberId;
     private LocalDateTime time;
 
     public Alarm() {}
 
-    public Alarm(Member member, String content){
+    public Alarm(Member member,Long fromMemberId, String content){
         this.member=member;
         this.content=content;
+        this.fromMemberId=fromMemberId;
         this.time=LocalDateTime.now();
         this.readCheck=false;
     }

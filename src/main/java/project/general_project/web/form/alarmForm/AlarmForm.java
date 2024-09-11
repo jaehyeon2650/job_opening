@@ -12,13 +12,15 @@ import java.time.LocalDateTime;
 public class AlarmForm {
     private Long id;
     private String content;
+    private Long formId;
     private boolean read;
     private LocalDateTime time;
 
     public static AlarmForm createAlarmForm(Alarm alarm){
         AlarmForm alarmForm=new AlarmForm();
-        alarmForm.setId(alarmForm.getId());
+        alarmForm.setId(alarm.getId());
         alarmForm.setContent(alarm.getContent());
+        alarmForm.setFormId(alarm.getFromMemberId());
         alarmForm.setTime(alarm.getTime());
         alarmForm.setRead(alarm.isReadCheck());
         return alarmForm;
