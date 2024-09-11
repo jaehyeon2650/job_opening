@@ -30,13 +30,13 @@ public class AssessmentController {
         Member fromMember = memberService.findById(member.getId());
         AssessmentForm form=new AssessmentForm(toMember.getUserId(),fromMember.getUserId());
         model.addAttribute("assessmentForm",form);
-        return "assessmentForm";
+        return "addAssessmentForm";
     }
 
     @PostMapping("/alarm/{alarmId}/assessment/{id}")
     public String addAssessment(@Validated @ModelAttribute("assessmentForm") AssessmentForm form, BindingResult bindingResult,@PathVariable("alarmId") Long id){
         if(bindingResult.hasErrors()){
-            return "assessmentForm";
+            return "addAssessmentForm";
         }
         Member toMember = memberService.findByUserId(form.getToMemberId());
         Member fromMember = memberService.findByUserId(form.getFromMemberId());
