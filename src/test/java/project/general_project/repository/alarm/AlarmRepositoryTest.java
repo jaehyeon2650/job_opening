@@ -113,4 +113,24 @@ class AlarmRepositoryTest {
         //then
         assertThat(count).isEqualTo(0);
     }
+
+    @Test
+    public void 모든_알람_삭제() throws Exception{
+        //given
+        Member member1=new Member();
+        em.persist(member1);
+        Alarm alarm1=new Alarm();
+        Alarm alarm2=new Alarm();
+        alarm1.setMember(member1);
+        alarm1.setReadCheck(false);
+        alarm2.setMember(member1);
+        alarm2.setReadCheck(false);
+        repository.save(alarm1);
+        repository.save(alarm2);
+        //when
+        repository.deleteAll(member1.getId());
+        List<Alarm> findAlarms = repository.findAlarmsByMemberId(member1.getId());
+        //then
+        assertThat(findAlarms.size()).isEqualTo(0);
+    }
 }
