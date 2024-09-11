@@ -95,14 +95,40 @@ body {
     color: #555555;
 }
 
+.alarm-header-buttons{
+    display: flex;
+}
+
 .mark-read-button {
     font-size: 16px;
     color: #007bff;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .mark-read-button:hover {
     text-decoration: underline;
 }
+
+.team-eval-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.team-eval-button:hover {
+    background-color: #218838;
+}
+
+.team-eval-button:active {
+    background-color: #1e7e34;
+}
+
 
 
