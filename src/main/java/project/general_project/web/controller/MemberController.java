@@ -14,14 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.general_project.domain.Address;
-import project.general_project.domain.Member;
-import project.general_project.domain.Picture;
-import project.general_project.domain.Post;
-import project.general_project.service.LoginService;
-import project.general_project.service.MemberService;
-import project.general_project.service.PictureStore;
-import project.general_project.service.PostService;
+import project.general_project.domain.*;
+import project.general_project.service.*;
 import project.general_project.validation.EditValidator;
 import project.general_project.validation.JoinValidator;
 
@@ -41,6 +35,8 @@ public class MemberController {
     private final LoginService loginService;
     private final PictureStore pictureStore;
     private final PostService postService;
+
+
     private final JoinValidator joinValidator;
     private final EditValidator editValidator;
 
@@ -147,9 +143,10 @@ public class MemberController {
         Member findMember = memberService.findByIdWithTeam(id);
         List<Post> posts = postService.findByMemberId(id);
         MemberForm memberForm=null;
+        double score=assessmentService.getAverage(id);
         if(findMember.getPicture()==null){
-            memberForm=new MemberForm(findMember,posts,null);
-        }else memberForm=new MemberForm(findMember,posts,findMember.getPicture().getSaveName());
+            memberForm=new MemberForm(findMember,posts,null,score);
+        }else memberForm=new MemberForm(findMember,posts,findMember.getPicture().getSaveName(),score);
         model.addAttribute("memberForm",memberForm);
         model.addAttribute("loginMember",loginMember);
         return "memberForm";
