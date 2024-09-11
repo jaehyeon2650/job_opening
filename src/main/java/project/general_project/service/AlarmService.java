@@ -57,6 +57,11 @@ public class AlarmService {
         return alarm.getId();
     }
 
+    @Transactional
+    public void deleteAlarm(Long id){
+        repository.deleteAll(id);
+    }
+
     public Long getNotReadCount(Long id){
         return repository.notReadCount(id);
     }
