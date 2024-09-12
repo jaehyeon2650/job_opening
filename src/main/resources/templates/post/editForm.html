@@ -2,16 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>게시글 작성</title>
-    <link th:href="@{/css/post.css}" href="../static/css/post.css" rel="stylesheet">
+    <title>게시글 수정</title>
+    <link th:href="@{/css/post.css}" href="../../static/css/post.css" rel="stylesheet">
 </head>
 <body>
 <div class="post-container">
-    <form th:action method="post" th:object="${postForm}" class="post-form">
-        <h2 class="post-title">게시글 작성</h2>
+    <form th:action method="post" th:object="${editPostForm}" class="post-form">
+        <h2 class="post-title">게시글 수정</h2>
 
         <label for="title" class="post-label">제목</label>
-        <input type="text" th:field="*{title}" id="title" class="post-input" placeholder="제목을 입력하세요">
+        <input type="text" th:field="*{title}" id="title" class="post-input" placeholder="제목을 입력하세요" >
         <p th:errors="*{title}" class="error"></p>
 
         <label for="content" class="post-label">내용</label>
@@ -23,9 +23,16 @@
             <div id="level" th:each="levelType:${levelTypes}" class="radio-group">
                 <div class="custom-radio-wrapper">
                     <input type="radio" th:field="*{levelStatus}" th:value="${levelType.name()}" class="custom-radio">
-                    <label th:for="${#ids.prev('levelStatus')}" th:text="${levelType.getDescription()}"
-                           class="custom-radio-label"></label>
+                    <label th:for="${#ids.prev('levelStatus')}" th:text="${levelType.getDescription()}" class="custom-radio-label"></label>
                 </div>
+            </div>
+        </div>
+
+        <div class="post-status">
+            <div class="status-label">모집 상태</div>
+            <div class="status-options" th:each="code : ${codes}">
+                <input type="radio" th:field="*{status}" th:value="${code.name()}" class="status-radio">
+                <label th:for="${#ids.prev('status')}" th:text="${code.description}" class="status-description"></label>
             </div>
         </div>
 

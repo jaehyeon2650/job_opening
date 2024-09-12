@@ -44,13 +44,13 @@ public class PostController {
     @GetMapping("/{id}/post/new")
     public String addPostForm(@ModelAttribute("postForm")PostForm postForm,@Login Member loginMember,@PathVariable("id") Long memberId){
         if(loginMember==null||loginMember.getId()!=memberId) return "redirect:/login";
-        return "addForm";
+        return "post/addForm";
     }
 
     @PostMapping("/{id}/post/new")
     public String addPost(@Validated @ModelAttribute("postForm") PostForm postForm, BindingResult bindingResult, @PathVariable("id") Long memberId, @Login Member loginMember, Model model){
         if(bindingResult.hasErrors()){
-            return "addForm";
+            return "post/addForm";
         }
         Member findMember = memberService.findById(memberId);
         if(loginMember.getId() != findMember.getId()){
@@ -77,7 +77,7 @@ public class PostController {
             List<Comment> childComment = commentService.findCommentByParentId(commentId);
             model.addAttribute("children",childComment);
         }
-        return "postForm";
+        return "post/postForm";
     }
 
     private void addCommentToModel(Model model, Long postId,Integer page) {
@@ -117,7 +117,7 @@ public class PostController {
         }
         if(bindingResult.hasErrors()){
             addCommentToModel(model,postId,1);
-            return "postForm";
+            return "post/postForm";
         }
         Post post = postService.findByIdWithMember(postId).get();
         Comment comment=Comment.createComment(loginMember,form.getContent(),post);
@@ -140,7 +140,7 @@ public class PostController {
         }
         if(bindingResult.hasErrors()){
             addCommentToModel(model,postId,1);
-            return "postForm";
+            return "post/postForm";
         }
         Post post = postService.findByIdWithMember(postId).get();
         Comment comment=Comment.createComment(loginMember,form.getContent(),post);
@@ -156,7 +156,7 @@ public class PostController {
         if(loginMember.getId()!=post.getMember().getId()) return "redirect:/";
         EditPostForm editPostForm=new EditPostForm(post.getTitle(),post.getContent(),post.getStatus(),post.getId(),post.getLevelStatus());
         model.addAttribute("editPostForm",editPostForm);
-        return "editForm";
+        return "post/editForm";
     }
 
     @PostMapping("/post/{postId}/edit")
@@ -164,7 +164,7 @@ public class PostController {
         Post findPost = postService.findByIdWithMember(editPostForm.getPostId()).get();
         if(findPost==null||findPost.getMember().getId()!=loginMember.getId()) return "redirect:/";
         if(bindingResult.hasErrors()){
-            return "editForm";
+            return "post/editForm";
         }
         log.info("level={}",editPostForm.getLevelStatus());
         Post post = makePostWithEditPostForm(editPostForm);

@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AlarmController {
     private final AlarmService alarmService;
-    private final MemberService memberService;
 
     @GetMapping("/member/{id}/alarm")
     public String getAlarm(@Login Member member, @PathVariable Long id, Model model){
@@ -33,7 +32,7 @@ public class AlarmController {
         model.addAttribute("count",alarmService.getNotReadCount(id));
         model.addAttribute("alarmForms",alarmForms);
         model.addAttribute("memberId",member.getId());
-        return "alarmForm";
+        return "alarm/alarmForm";
     }
 
     @PostMapping("/member/{id}/alarm/edit")

@@ -57,20 +57,20 @@ public class MemberController {
         if (member != null) {
             return "redirect:/loginHome";
         }
-        return "login";
+        return "member/login";
     }
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURI){
 
         if(bindingResult.hasErrors()){
-            return "login";
+            return "member/login";
         }
 
         Member loginMember = loginService.login(loginForm.getId(), loginForm.getPassword());
         if(loginMember==null){
             bindingResult.reject("loginFail","아이디 혹은 비밀번호가 잘못되었습니다.");
-            return "login";
+            return "member/login";
         }
 
         HttpSession session = request.getSession();
@@ -81,13 +81,13 @@ public class MemberController {
 
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("joinForm") JoinForm joinForm) {
-        return "join";
+        return "member/join";
     }
 
     @PostMapping("/join")
     public String join(@Validated @ModelAttribute("joinForm") JoinForm joinForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return "join";
+            return "member/join";
         }
         Address address=Address.createAddress(joinForm.getZipcode(),joinForm.getCity(),joinForm.getDetailAddress());
         String number= joinForm.getFirstPhone()+joinForm.getSecondPhone()+joinForm.getThirdPhone();
@@ -95,7 +95,7 @@ public class MemberController {
         Long save = memberService.save(member);
         if(save==-1){
             bindingResult.reject("duplicateId");
-            return "join";
+            return "member/join";
         }
         return "redirect:/";
     }
@@ -117,7 +117,7 @@ public class MemberController {
             editForm=new EditForm(findMember,findMember.getPicture().getSaveName());
         }else editForm=new EditForm(findMember,null);
         model.addAttribute("editForm",editForm);
-        return "updateMemberForm";
+        return "member/updateMemberForm";
     }
 
     @PostMapping("/member/{id}/edit")
@@ -126,7 +126,7 @@ public class MemberController {
 
         if(bindingResult.hasErrors()){
             log.info("error");
-            return "updateMemberForm";
+            return "member/updateMemberForm";
         }
 
         Address address=Address.createAddress(editForm.getZipcode(),editForm.getCity(),editForm.getDetailAddress());
@@ -152,7 +152,7 @@ public class MemberController {
         }else memberForm=new MemberForm(findMember,posts,findMember.getPicture().getSaveName(),score);
         model.addAttribute("memberForm",memberForm);
         model.addAttribute("loginMember",loginMember);
-        return "memberForm";
+        return "member/memberForm";
     }
 
     @ResponseBody
@@ -172,6 +172,6 @@ public class MemberController {
         double average = assessmentService.getAverage(id);
         model.addAttribute("score",average);
         model.addAttribute("id",id);
-        return "assessmentForm";
+        return "assessment/assessmentForm";
     }
 }
