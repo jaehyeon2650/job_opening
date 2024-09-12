@@ -8,29 +8,29 @@
 <body>
 <header class="header home_header">
     <div class="header-buttons">
-        <button th:onclick="|location.href='@{/join}'|" type="button" class="btn">회원가입</button>
-        <button th:onclick="|location.href='@{/login}'|" type="button" class="btn">로그인</button>
+        <button th:onclick="|location.href='@{/join}'|" type="button" class="btn" th:text="#{join}">회원가입</button>
+        <button th:onclick="|location.href='@{/login}'|" type="button" class="btn" th:text="#{login}">로그인</button>
     </div>
 </header>
 <div class="search-container">
     <form th:object="${postSearchForm}" method="get" class="search-form">
         <input type="text" th:field="*{content}" id="content" class="search-input">
-        <button type="submit" class="search-button">검색</button>
+        <button type="submit" class="search-button" th:text="#{search}">검색</button>
     </form>
 </div>
 <div class="filter-buttons">
-    <button th:onclick="|location.href='@{/}'|" class="filter-btn">전체</button>
-    <button th:onclick="|location.href='@{/?level=초급}'|" class="filter-btn">초급</button>
-    <button th:onclick="|location.href='@{/?level=중급}'|" class="filter-btn">중급</button>
-    <button th:onclick="|location.href='@{/?level=고급}'|" class="filter-btn">고급</button>
+    <button th:onclick="|location.href='@{/}'|" class="filter-btn" th:text="#{total}">전체</button>
+    <button th:onclick="|location.href='@{/?level=초급}'|" class="filter-btn" th:text="#{beginner}">초급</button>
+    <button th:onclick="|location.href='@{/?level=중급}'|" class="filter-btn" th:text="#{intermediate}">중급</button>
+    <button th:onclick="|location.href='@{/?level=고급}'|" class="filter-btn" th:text="#{advanced}">고급</button>
 </div>
 <main class="container">
     <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|"
          class="post-card">
         <div th:text="${postForm.title}" class="post-title">제목</div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|"
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="#{post.status.comp}"
              class="post-status closed"></div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|"
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="#{post.status.ready}"
              class="post-status open"></div>
         <div th:text="${postForm.levelStatus.getDescription()}" class="post-status open"></div>
         <div th:text="${postForm.content}" class="post-content">내용</div>

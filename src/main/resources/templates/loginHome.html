@@ -7,38 +7,38 @@
 </head>
 <header class="header">
     <div th:object="${member}" class="welcome">
-        <p th:text="|안녕하세요! *{username}님|"></p>
+        <p th:text="#{member.welcome(*{username})}"></p>
     </div>
     <div class="header-buttons">
-        <button th:onclick="|location.href='@{/logout}'|" type="button" class="btn">로그아웃</button>
-        <button th:onclick="|location.href='@{/member/{id} (id=${member.id})}'|" class="btn">회원 정보</button>
-        <button th:onclick="|location.href='@{/{id}/post/new (id=${member.id})}'|" class="btn">게시글 작성</button>
-        <button th:if="${member.team == null}" th:onclick="|location.href='@{/team/new}'|" class="btn">팀 생성</button>
+        <button th:onclick="|location.href='@{/logout}'|" type="button" class="btn" th:text="#{logout}">로그아웃</button>
+        <button th:onclick="|location.href='@{/member/{id} (id=${member.id})}'|" class="btn" th:text="#{member}">회원 정보</button>
+        <button th:onclick="|location.href='@{/{id}/post/new (id=${member.id})}'|" class="btn" th:text="#{post.write}">게시글 작성</button>
+        <button th:if="${member.team == null}" th:onclick="|location.href='@{/team/new}'|" class="btn" th:text="#{team.create}">팀 생성</button>
         <button th:if="${member.team != null}"
-                th:onclick="|location.href='@{/team/{teamId} (teamId=${member.team.id})}'|" class="btn">팀 조회
+                th:onclick="|location.href='@{/team/{teamId} (teamId=${member.team.id})}'|" class="btn" th:text="#{team}">팀 조회
         </button>
-        <button th:onclick="|location.href='@{/member/{id}/alarm (id=${member.id})}'|" class="btn">소식</button>
+        <button th:onclick="|location.href='@{/member/{id}/alarm (id=${member.id})}'|" class="btn" th:text="#{alarm}">소식</button>
     </div>
 </header>
 <div class="search-container">
     <form th:object="${postSearchForm}" method="get" class="search-form">
         <input type="text" th:field="*{content}" id="content" class="search-input">
-        <button type="submit" class="search-button">검색</button>
+        <button type="submit" class="search-button" th:text="#{search}">검색</button>
     </form>
 </div>
 <div class="filter-buttons">
-    <button th:onclick="|location.href='@{/loginHome}'|" class="filter-btn">전체</button>
-    <button th:onclick="|location.href='@{/loginHome?level=초급}'|" class="filter-btn">초급</button>
-    <button th:onclick="|location.href='@{/loginHome?level=중급}'|" class="filter-btn">중급</button>
-    <button th:onclick="|location.href='@{/loginHome?level=고급}'|" class="filter-btn">고급</button>
+    <button th:onclick="|location.href='@{/loginHome}'|" class="filter-btn" th:text="#{total}">전체</button>
+    <button th:onclick="|location.href='@{/loginHome?level=초급}'|" class="filter-btn" th:text="#{beginner}">초급</button>
+    <button th:onclick="|location.href='@{/loginHome?level=중급}'|" class="filter-btn" th:text="#{intermediate}">중급</button>
+    <button th:onclick="|location.href='@{/loginHome?level=고급}'|" class="filter-btn" th:text="#{advanced}">고급</button>
 </div>
 <main class="container">
     <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|"
          class="post-card">
         <div th:text="${postForm.title}" class="post-title">제목</div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|"
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="#{post.status.comp}"
              class="post-status closed"></div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|"
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="#{post.status.ready}"
              class="post-status open"></div>
         <div th:text="${postForm.levelStatus.getDescription()}" class="post-status open"></div>
         <div th:text="${postForm.content}" class="post-content">내용</div>
