@@ -23,32 +23,34 @@ public class MemberForm {
     private String teamName;
     private double score;
     private Long teamId;
-    private List<PostDto> posts=new ArrayList<>();
+    private List<PostDto> posts = new ArrayList<>();
     private String savedPath;
-    public MemberForm(Member member, List<Post> posts,String savedPath,double score) {
-        this.score=score;
-        this.id=member.getId();
+
+    public MemberForm(Member member, List<Post> posts, String savedPath, double score) {
+        this.score = score;
+        this.id = member.getId();
         this.username = member.getUsername();
         String phone = member.getPhone();
-        this.firstPhone = phone.substring(0,3);;
-        SecondPhone = phone.substring(3,7);
+        this.firstPhone = phone.substring(0, 3);
+        SecondPhone = phone.substring(3, 7);
         ThirdPhone = phone.substring(7);
         this.email = member.getEmail();
         this.zipcode = member.getAddress().getZipcode();
         this.city = member.getAddress().getCity();
         this.detailAddress = member.getAddress().getDetailAddress();
-        if(member.getTeam()!=null){
-            this.teamName=member.getTeam().getName();
-            this.teamId=member.getTeam().getId();
+        if (member.getTeam() != null) {
+            this.teamName = member.getTeam().getName();
+            this.teamId = member.getTeam().getId();
         }
         for (Post post : posts) {
-            this.posts.add(new PostDto(post.getTitle(),post.getId()));
+            this.posts.add(new PostDto(post.getTitle(), post.getId()));
         }
-        this.savedPath=savedPath;
+        this.savedPath = savedPath;
     }
+
     @Getter
     @Setter
-    static class PostDto{
+    static class PostDto {
         private String name;
         private Long postId;
 

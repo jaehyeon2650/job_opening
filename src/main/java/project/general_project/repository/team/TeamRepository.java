@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import project.general_project.domain.Member;
 import project.general_project.domain.Team;
 
-import static project.general_project.domain.QTeam.*;
+import static project.general_project.domain.QTeam.team;
 
 @Repository
 public class TeamRepository {
@@ -14,41 +14,43 @@ public class TeamRepository {
     private final JPAQueryFactory query;
 
     public TeamRepository(EntityManager em) {
-        this.em=em;
-        query=new JPAQueryFactory(em);
+        this.em = em;
+        query = new JPAQueryFactory(em);
     }
 
-    public void save(Team team){
+    public void save(Team team) {
         em.persist(team);
     }
 
-    public Team getTeamById(Long id){
-        return em.find(Team.class,id);
+    public Team getTeamById(Long id) {
+        return em.find(Team.class, id);
     }
 
-    public Team getTeamByIdWithLeader(Long id){
+    public Team getTeamByIdWithLeader(Long id) {
         return query.selectFrom(team)
                 .join(team.leader).fetchJoin()
                 .where(team.id.eq(id)).fetchOne();
 
     }
-    public Team getTeamByIdWithMembers(Long id){
+
+    public Team getTeamByIdWithMembers(Long id) {
         return query.selectFrom(team)
                 .leftJoin(team.members).fetchJoin()
                 .where(team.id.eq(id)).fetchOne();
     }
 
-    public void deleteTeam(Team team){
+    public void deleteTeam(Team team) {
         resetTeamMembers(team);
         em.createQuery("delete from Team t where t.id=:teamId")
-                .setParameter("teamId",team.getId())
+                .setParameter("teamId", team.getId())
                 .executeUpdate();
         em.flush();
         em.clear();
     }
-    public void resetTeamMembers(Team team){
+
+    public void resetTeamMembers(Team team) {
         em.createQuery("update Member m set m.team=null where m.team.id=:teamId")
-                .setParameter("teamId",team.getId())
+                .setParameter("teamId", team.getId())
                 .executeUpdate();
 
         for (Member member : team.getMembers()) {

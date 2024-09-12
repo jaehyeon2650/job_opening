@@ -7,9 +7,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Alarm {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
     private String content;
     private boolean readCheck;
@@ -19,13 +21,14 @@ public class Alarm {
     private Long fromMemberId;
     private LocalDateTime time;
 
-    public Alarm() {}
+    public Alarm() {
+    }
 
-    public Alarm(Member member,Long fromMemberId, String content){
-        this.member=member;
-        this.content=content;
-        this.fromMemberId=fromMemberId;
-        this.time=LocalDateTime.now();
-        this.readCheck=false;
+    public Alarm(Member member, Long fromMemberId, String content) {
+        this.member = member;
+        this.content = content;
+        this.fromMemberId = fromMemberId;
+        this.time = LocalDateTime.now();
+        this.readCheck = false;
     }
 }

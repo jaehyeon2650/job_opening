@@ -15,11 +15,11 @@ public class EditPostForm {
     private Long postId;
     private LevelStatus levelStatus;
 
-    public EditPostForm(String title, String content, RecruitmentStatus status, Long postId,LevelStatus levelStatus) {
+    public EditPostForm(String title, String content, RecruitmentStatus status, Long postId, LevelStatus levelStatus) {
         this.title = title;
         this.content = content;
         this.status = status;
         this.postId = postId;
-        this.levelStatus=levelStatus;
+        this.levelStatus = levelStatus;
     }
 }

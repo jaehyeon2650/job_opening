@@ -1,6 +1,6 @@
 package project.general_project.exception;
 
-public class NoTeamException extends RuntimeException{
+public class NoTeamException extends RuntimeException {
     public NoTeamException() {
         super();
     }

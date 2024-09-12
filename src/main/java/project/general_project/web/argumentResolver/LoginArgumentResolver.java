@@ -16,14 +16,14 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
         boolean hasMemberType = Member.class.isAssignableFrom(parameter.getParameterType());
-        return hasLoginAnnotation||hasMemberType;
+        return hasLoginAnnotation || hasMemberType;
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession(false);
-        if(session==null||session.getAttribute(SessionConst.LOGIN_MEMBER)==null){
+        if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
             return null;
         }
 

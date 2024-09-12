@@ -16,11 +16,11 @@
         </div>
 
         <label for="id" class="login-label">아이디</label>
-        <input type="text" th:field="*{id}" id="id" class="login-input" />
+        <input type="text" th:field="*{id}" id="id" class="login-input"/>
         <p th:errors="*{id}" class="error"></p>
 
         <label for="password" class="login-label">비밀번호</label>
-        <input type="password" th:field="*{password}" id="password" class="login-input" />
+        <input type="password" th:field="*{password}" id="password" class="login-input"/>
         <p th:errors="*{password}" class="error"></p>
 
         <button type="submit" class="login-button">로그인</button>

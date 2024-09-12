@@ -21,9 +21,11 @@ body {
     justify-content: center;
     align-items: center;
 }
-.join-form{
+
+.join-form {
     width: 80%;
 }
+
 .join-title {
     font-size: 24px;
     margin-bottom: 1rem;

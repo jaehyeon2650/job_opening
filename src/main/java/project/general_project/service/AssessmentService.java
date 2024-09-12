@@ -16,20 +16,20 @@ public class AssessmentService {
     private final AssessmentRepository repository;
 
     @Transactional
-    public void createAssessment(Member toMember,Member fromMember,String content,int score){
-        Assessment assessment=new Assessment(toMember,fromMember,score,content);
+    public void createAssessment(Member toMember, Member fromMember, String content, int score) {
+        Assessment assessment = new Assessment(toMember, fromMember, score, content);
         repository.save(assessment);
     }
 
-    public List<Assessment> getAllAssessment(Long memberId){
+    public List<Assessment> getAllAssessment(Long memberId) {
         return repository.getAllAssessment(memberId);
     }
 
-    public Long getCount(Long memberId){
+    public Long getCount(Long memberId) {
         return repository.getAssessmentCount(memberId);
     }
 
-    public double getAverage(Long memberId){
+    public double getAverage(Long memberId) {
         return repository.getAverageScore(memberId);
     }
 }

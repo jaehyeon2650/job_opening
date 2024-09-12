@@ -8,20 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import project.general_project.domain.Member;
 import project.general_project.repository.member.MemberRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class LoginService {
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-    public Member login(String loginId,String password){
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public Member login(String loginId, String password) {
         Member member = memberRepository.findByUserID(loginId).orElse(null);
-        if(member==null){
+        if (member == null) {
             return null;
         }
-        if(!passwordEncoder.matches(password,member.getPassword())){
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             return null;
         }
 

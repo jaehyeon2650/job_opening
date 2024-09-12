@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository repository;
     private final PictureStore pictureStore;
-    private final PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public Long save(Member member) {
@@ -35,12 +35,13 @@ public class MemberService {
     public Member findById(Long id) {
         return repository.findById(id);
     }
-    public Member findByUserId(String userId){
+
+    public Member findByUserId(String userId) {
         return repository.findByUserID(userId).get();
     }
 
     @Transactional
-    public Long updateMember(Member member){
+    public Long updateMember(Member member) {
         Member findMember = repository.findById(member.getId());
         findMember.setUsername(member.getUsername());
         findMember.setPhone(member.getPhone());
@@ -49,7 +50,7 @@ public class MemberService {
         return findMember.getId();
     }
 
-    public Member findByIdWithTeam(Long id){
+    public Member findByIdWithTeam(Long id) {
         return repository.findByIdWithTeam(id);
     }
 

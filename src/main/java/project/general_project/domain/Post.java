@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
 public class Post {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -26,8 +25,8 @@ public class Post {
     private LevelStatus levelStatus;
 
 
-    public static Post createPost(Member member,String title,String content,LevelStatus levelStatus){
-        Post post=new Post();
+    public static Post createPost(Member member, String title, String content, LevelStatus levelStatus) {
+        Post post = new Post();
         post.setMember(member);
         post.setTitle(title);
         post.setContent(content);

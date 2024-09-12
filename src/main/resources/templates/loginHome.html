@@ -14,7 +14,9 @@
         <button th:onclick="|location.href='@{/member/{id} (id=${member.id})}'|" class="btn">회원 정보</button>
         <button th:onclick="|location.href='@{/{id}/post/new (id=${member.id})}'|" class="btn">게시글 작성</button>
         <button th:if="${member.team == null}" th:onclick="|location.href='@{/team/new}'|" class="btn">팀 생성</button>
-        <button th:if="${member.team != null}" th:onclick="|location.href='@{/team/{teamId} (teamId=${member.team.id})}'|" class="btn">팀 조회</button>
+        <button th:if="${member.team != null}"
+                th:onclick="|location.href='@{/team/{teamId} (teamId=${member.team.id})}'|" class="btn">팀 조회
+        </button>
         <button th:onclick="|location.href='@{/member/{id}/alarm (id=${member.id})}'|" class="btn">소식</button>
     </div>
 </header>
@@ -31,20 +33,25 @@
     <button th:onclick="|location.href='@{/loginHome?level=고급}'|" class="filter-btn">고급</button>
 </div>
 <main class="container">
-    <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|" class="post-card">
+    <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|"
+         class="post-card">
         <div th:text="${postForm.title}" class="post-title">제목</div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|" class="post-status closed" ></div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|" class="post-status open"></div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|"
+             class="post-status closed"></div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|"
+             class="post-status open"></div>
         <div th:text="${postForm.levelStatus.getDescription()}" class="post-status open"></div>
         <div th:text="${postForm.content}" class="post-content">내용</div>
     </div>
 </main>
 <div class="pagination">
     <button th:if="${currentPage > 10}"
-            th:onclick="|location.href='@{/?page=1}'|">1</button>
+            th:onclick="|location.href='@{/?page=1}'|">1
+    </button>
 
     <button th:if="${currentPage > 10}"
-            th:onclick="|location.href='@{/?page={page} (page=${((currentPage - 1) / 10) * 10})}'|">...</button>
+            th:onclick="|location.href='@{/?page={page} (page=${((currentPage - 1) / 10) * 10})}'|">...
+    </button>
 
     <button th:each="i : ${#numbers.sequence(((currentPage - 1) / 10) * 10 + 1,
                                              (totalPages > (((currentPage - 1) / 10) + 1) * 10) ? (((currentPage - 1) / 10) + 1) * 10 : totalPages)}"
@@ -53,7 +60,8 @@
             th:classappend="${currentPage == i} ? 'active' : ''"></button>
 
     <button th:if="${totalPages > (((currentPage - 1) / 10) + 1) * 10}"
-            th:onclick="|location.href='@{/?page={page} (page=${(((currentPage - 1) / 10) + 1) * 10 + 1})}'|">...</button>
+            th:onclick="|location.href='@{/?page={page} (page=${(((currentPage - 1) / 10) + 1) * 10 + 1})}'|">...
+    </button>
 
     <button th:if="${totalPages > (((currentPage - 1) / 10) + 1) * 10}"
             th:onclick="|location.href='@{/?page={totalPages} (totalPages=${totalPages})}'|"

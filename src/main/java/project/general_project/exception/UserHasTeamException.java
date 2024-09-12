@@ -1,6 +1,6 @@
 package project.general_project.exception;
 
-public class UserHasTeamException extends RuntimeException{
+public class UserHasTeamException extends RuntimeException {
     public UserHasTeamException() {
         super();
     }

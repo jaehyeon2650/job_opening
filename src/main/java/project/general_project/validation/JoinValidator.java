@@ -20,14 +20,14 @@ public class JoinValidator implements Validator {
     public void validate(Object target, Errors errors) {
         String specialCharacters = "[!@#$%^&*(),.?\":{}|<>]";
         JoinForm joinForm = (JoinForm) target;
-        if(!joinForm.getPassword().matches(".*"+specialCharacters+".*")||joinForm.getPassword().length()<10){
-            errors.rejectValue("password","rule");
+        if (!joinForm.getPassword().matches(".*" + specialCharacters + ".*") || joinForm.getPassword().length() < 10) {
+            errors.rejectValue("password", "rule");
         }
-        if(!joinForm.getPassword().equals(joinForm.getPasswordCheck())){
-            errors.rejectValue("passwordCheck","passCheck");
+        if (!joinForm.getPassword().equals(joinForm.getPasswordCheck())) {
+            errors.rejectValue("passwordCheck", "passCheck");
         }
-        if(!StringUtils.hasText(joinForm.getFirstPhone())||!StringUtils.hasText(joinForm.getSecondPhone())||!StringUtils.hasText(joinForm.getThirdPhone())){
-            errors.rejectValue("firstPhone","phoneCheck");
+        if (!StringUtils.hasText(joinForm.getFirstPhone()) || !StringUtils.hasText(joinForm.getSecondPhone()) || !StringUtils.hasText(joinForm.getThirdPhone())) {
+            errors.rejectValue("firstPhone", "phoneCheck");
         }
     }
 }

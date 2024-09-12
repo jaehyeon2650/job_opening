@@ -8,20 +8,25 @@
 <body>
 <div class="alarm-container">
     <h1 class="alarm-title">소식</h1>
-        <div th:if="${alarmForms.size()==0}" th:text="|최근 소식이 없습니다!|" class="no-alarms"></div>
-        <div th:if="${alarmForms.size()}!=0" class="alarm-header">
-            <p th:text="|읽지 않은 알람 개수 : ${count}|" class="alarm-count"></p>
-            <div class="alarm-header-buttons">
-                <p th:text="|모두 읽음으로 표시|" class="mark-read-button" th:onclick="|sendPostRequest('@{/member/{id}/alarm/edit (id=${memberId})}')|"></p>
-                <p th:text="|모두 삭제|" class="mark-read-button" th:onclick="|sendPostRequest('@{/member/{id}/alarm/delete (id=${memberId})}')|"></p>
-            </div>
+    <div th:if="${alarmForms.size()==0}" th:text="|최근 소식이 없습니다!|" class="no-alarms"></div>
+    <div th:if="${alarmForms.size()}!=0" class="alarm-header">
+        <p th:text="|읽지 않은 알람 개수 : ${count}|" class="alarm-count"></p>
+        <div class="alarm-header-buttons">
+            <p th:text="|모두 읽음으로 표시|" class="mark-read-button"
+               th:onclick="|sendPostRequest('@{/member/{id}/alarm/edit (id=${memberId})}')|"></p>
+            <p th:text="|모두 삭제|" class="mark-read-button"
+               th:onclick="|sendPostRequest('@{/member/{id}/alarm/delete (id=${memberId})}')|"></p>
         </div>
-        <div th:if="${alarmForms.size()!=0}" th:each="alarmForm:${alarmForms}" class="alarm-item">
-            <p th:text="${alarmForm.content}" class="alarm-message"></p>
-            <p th:text="${#temporals.format(alarmForm.time, 'yyyy-MM-dd HH:mm')}" class="alarm-meta"></p>
-            <p th:text="${alarmForm.read==false}?'읽지 않음':'읽음'" class="alarm-meta"></p>
-            <button th:if="${alarmForm.read==false and alarmForm.formId != null}" class="team-eval-button" type="button" th:onclick="|location.href='@{/alarm/{alarmId}/assessment/{id} (alarmId=${alarmForm.id},id=${alarmForm.formId})}'|">팀원 평가하기</button>
-        </div>
+    </div>
+    <div th:if="${alarmForms.size()!=0}" th:each="alarmForm:${alarmForms}" class="alarm-item">
+        <p th:text="${alarmForm.content}" class="alarm-message"></p>
+        <p th:text="${#temporals.format(alarmForm.time, 'yyyy-MM-dd HH:mm')}" class="alarm-meta"></p>
+        <p th:text="${alarmForm.read==false}?'읽지 않음':'읽음'" class="alarm-meta"></p>
+        <button th:if="${alarmForm.read==false and alarmForm.formId != null}" class="team-eval-button" type="button"
+                th:onclick="|location.href='@{/alarm/{alarmId}/assessment/{id} (alarmId=${alarmForm.id},id=${alarmForm.formId})}'|">
+            팀원 평가하기
+        </button>
+    </div>
     <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
 </div>
 </body>

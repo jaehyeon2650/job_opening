@@ -11,18 +11,19 @@ import java.util.List;
 @Getter
 @Setter
 public class Team {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private String name;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="leader_id")
+    @JoinColumn(name = "leader_id")
     private Member leader;
 
     @OneToMany(mappedBy = "team")
-    private List<Member> members=new ArrayList<>();
+    private List<Member> members = new ArrayList<>();
 
-    public void addMember(Member member){
+    public void addMember(Member member) {
         members.add(member);
         member.setTeam(this);
     }

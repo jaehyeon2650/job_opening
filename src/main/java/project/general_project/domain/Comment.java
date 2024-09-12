@@ -11,7 +11,8 @@ import java.util.List;
 @Data
 public class Comment {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -19,33 +20,32 @@ public class Comment {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent",orphanRemoval = true,cascade = CascadeType.ALL)
-    private List<Comment> comments= new ArrayList<>();
+    @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
     @Lob
     private String content;
 
     private LocalDateTime created;
 
-
-    public void addComment(Comment comment){
-        comments.add(comment);
-        comment.setParent(this);
-    }
-
-    public static Comment createComment(Member member,String content,Post post){
-        Comment comment=new Comment();
+    public static Comment createComment(Member member, String content, Post post) {
+        Comment comment = new Comment();
         comment.setMember(member);
         comment.setPost(post);
         comment.setContent(content);
         comment.setCreated(LocalDateTime.now());
         return comment;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setParent(this);
     }
 
 }

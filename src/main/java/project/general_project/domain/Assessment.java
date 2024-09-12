@@ -5,15 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Assessment {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_id")
     private Member toMember;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="from_id")
+    @JoinColumn(name = "from_id")
     private Member fromMember;
     private int score;
     private String content;

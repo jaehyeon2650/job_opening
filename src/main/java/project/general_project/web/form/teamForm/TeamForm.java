@@ -17,20 +17,21 @@ public class TeamForm {
     private Long leaderId;
     private List<MemberDto> members;
 
-    public TeamForm(Team team){
-        this.teamId=team.getId();
-        this.teamName= team.getName();
-        this.leaderUserId=team.getLeader().getUserId();
-        this.leaderId=team.getLeader().getId();
-        members=team.getMembers().stream().map(o->{
-            return new MemberDto(o.getId(),o.getUserId());
+    public TeamForm(Team team) {
+        this.teamId = team.getId();
+        this.teamName = team.getName();
+        this.leaderUserId = team.getLeader().getUserId();
+        this.leaderId = team.getLeader().getId();
+        members = team.getMembers().stream().map(o -> {
+            return new MemberDto(o.getId(), o.getUserId());
         }).collect(Collectors.toList());
     }
 
 
     @Data
-    @Getter @Setter
-    static class MemberDto{
+    @Getter
+    @Setter
+    static class MemberDto {
         private Long Id;
         private String userId;
 

@@ -25,20 +25,26 @@
     <button th:onclick="|location.href='@{/?level=고급}'|" class="filter-btn">고급</button>
 </div>
 <main class="container">
-    <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|" class="post-card">
+    <div th:each="postForm:${postForms}" th:onclick="|location.href='@{/post/{id} (id=${postForm.postId})}'|"
+         class="post-card">
         <div th:text="${postForm.title}" class="post-title">제목</div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|" class="post-status closed"></div>
-        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|" class="post-status open"></div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}" th:text="|모집 마감|"
+             class="post-status closed"></div>
+        <div th:if="${postForm.status==T(project.general_project.domain.RecruitmentStatus).READY}" th:text="|모집 중|"
+             class="post-status open"></div>
         <div th:text="${postForm.levelStatus.getDescription()}" class="post-status open"></div>
         <div th:text="${postForm.content}" class="post-content">내용</div>
     </div>
 </main>
 <div class="pagination">
     <button th:if="${currentPage > 10}"
-            th:onclick="|location.href='@{/?page=1&level={level} (level=${level})}'|">1</button>
+            th:onclick="|location.href='@{/?page=1&level={level} (level=${level})}'|">1
+    </button>
 
     <button th:if="${currentPage > 10}"
-            th:onclick="|location.href='@{/?page={page}&level={level} (page=${((currentPage - 1) / 10) * 10},level=${level})}'|">...</button>
+            th:onclick="|location.href='@{/?page={page}&level={level} (page=${((currentPage - 1) / 10) * 10},level=${level})}'|">
+        ...
+    </button>
 
     <button th:each="i : ${#numbers.sequence(((currentPage - 1) / 10) * 10 + 1, (totalPages > (((currentPage - 1) / 10) + 1) * 10) ? (((currentPage - 1) / 10) + 1) * 10 : totalPages)}"
             th:onclick="|location.href='@{/?page={page}&level={level} (page=${i},level=${level})}'|"
@@ -46,13 +52,14 @@
             th:classappend="${currentPage == i} ? 'active' : ''"></button>
 
     <button th:if="${totalPages > (((currentPage - 1) / 10) + 1) * 10}"
-            th:onclick="|location.href='@{/?page={page}&level={level} (page=${(((currentPage - 1) / 10) + 1) * 10 + 1},level=${level})}'|">...</button>
+            th:onclick="|location.href='@{/?page={page}&level={level} (page=${(((currentPage - 1) / 10) + 1) * 10 + 1},level=${level})}'|">
+        ...
+    </button>
 
     <button th:if="${totalPages > (((currentPage - 1) / 10) + 1) * 10}"
             th:onclick="|location.href='@{/?page={totalPages}&level={level} (totalPages=${totalPages},level=${level})}'|"
             th:text="${totalPages}"></button>
 </div>
-
 
 
 </body>

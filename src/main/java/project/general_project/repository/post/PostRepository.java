@@ -10,9 +10,9 @@ import project.general_project.domain.Post;
 
 import java.util.List;
 
-import static com.querydsl.core.types.dsl.Expressions.*;
-import static project.general_project.domain.QComment.*;
-import static project.general_project.domain.QPost.*;
+import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
+import static project.general_project.domain.QComment.comment;
+import static project.general_project.domain.QPost.post;
 
 @Repository
 public class PostRepository {
@@ -21,70 +21,76 @@ public class PostRepository {
 
     public PostRepository(EntityManager em) {
         this.em = em;
-        query=new JPAQueryFactory(em);
+        query = new JPAQueryFactory(em);
     }
 
-    public void save(Post post){
+    public void save(Post post) {
         em.persist(post);
     }
-    public Post findById(Long postId){
-        return em.find(Post.class,postId);
+
+    public Post findById(Long postId) {
+        return em.find(Post.class, postId);
     }
-    public Post findByIdWithMember(Long postId){
-        return em.createQuery("select p from Post p join fetch p.member m where p.id=:postId",Post.class)
-                .setParameter("postId",postId)
+
+    public Post findByIdWithMember(Long postId) {
+        return em.createQuery("select p from Post p join fetch p.member m where p.id=:postId", Post.class)
+                .setParameter("postId", postId)
                 .getSingleResult();
     }
-    public List<Post> findByMemberId(Long memberId){
+
+    public List<Post> findByMemberId(Long memberId) {
         return em.createQuery("select p from Post p where p.member.id=:memberId", Post.class)
-                .setParameter("memberId",memberId)
+                .setParameter("memberId", memberId)
                 .getResultList();
     }
 
-    public Comment findCommentById(Long commentId){
-        return em.find(Comment.class,commentId);
+    public Comment findCommentById(Long commentId) {
+        return em.find(Comment.class, commentId);
     }
 
-    public List<Post> getPosts(int start,int count){
+    public List<Post> getPosts(int start, int count) {
         return em.createQuery("select p from Post p order by p.created asc", Post.class)
-                .setFirstResult(start*10)
+                .setFirstResult(start * 10)
                 .setMaxResults(count)
                 .getResultList();
     }
-    public List<Post> getPostsByLevelStatus(LevelStatus levelStatus,int start,int count){
+
+    public List<Post> getPostsByLevelStatus(LevelStatus levelStatus, int start, int count) {
         return query
                 .selectFrom(post)
                 .where(post.levelStatus.eq(levelStatus))
-                .orderBy(post.status.desc(),post.created.desc())
-                .offset(start*10)
-                .limit(count)
-                .fetch();
-    }
-    public List<Post> getPostsByTitle(String content,int start,int count){
-        return query
-                .selectFrom(post)
-                .where(titleLike(content))
-                .orderBy(post.status.desc(),post.created.desc())
-                .offset(start*10)
+                .orderBy(post.status.desc(), post.created.desc())
+                .offset(start * 10L)
                 .limit(count)
                 .fetch();
     }
 
-    public Long getPostCount(){
+    public List<Post> getPostsByTitle(String content, int start, int count) {
+        return query
+                .selectFrom(post)
+                .where(titleLike(content))
+                .orderBy(post.status.desc(), post.created.desc())
+                .offset(start * 10L)
+                .limit(count)
+                .fetch();
+    }
+
+    public Long getPostCount() {
         List<Long> fetch = query.select(post.count()).from(post).fetch();
         Long count = fetch.get(0);
         return count;
     }
-    public Long getPostCountWithLevelStatus(LevelStatus levelStatus){
-        List<Long> fetch=query.select(post.count()).from(post).where(post.levelStatus.eq(levelStatus)).fetch();
+
+    public Long getPostCountWithLevelStatus(LevelStatus levelStatus) {
+        List<Long> fetch = query.select(post.count()).from(post).where(post.levelStatus.eq(levelStatus)).fetch();
         return fetch.get(0);
     }
 
-    private BooleanExpression titleLike(String content){
-        return content != null? stringTemplate("lower({0})",post.title).like("%"+content.toLowerCase()+"%"):null;
+    private BooleanExpression titleLike(String content) {
+        return content != null ? stringTemplate("lower({0})", post.title).like("%" + content.toLowerCase() + "%") : null;
     }
 
-    public void deletePost(Long postId){
+    public void deletePost(Long postId) {
         List<Comment> comments = query.selectFrom(comment)
                 .where(comment.parent.isNull().and(comment.post.id.eq(postId)))
                 .fetch();

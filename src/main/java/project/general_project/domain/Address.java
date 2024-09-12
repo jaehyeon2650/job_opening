@@ -20,8 +20,8 @@ public class Address {
 
     }
 
-    public static Address createAddress(String zipcode, String city, String detailAddress){
-        Address address=new Address(zipcode,city,detailAddress);
+    public static Address createAddress(String zipcode, String city, String detailAddress) {
+        Address address = new Address(zipcode, city, detailAddress);
         return address;
     }
 }

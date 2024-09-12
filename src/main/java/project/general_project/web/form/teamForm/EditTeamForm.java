@@ -3,7 +3,6 @@ package project.general_project.web.form.teamForm;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import project.general_project.domain.Team;
 
 import java.util.ArrayList;
@@ -15,12 +14,12 @@ public class EditTeamForm {
     @NotBlank
     private String teamName;
     private String leaderUserId;
-    private List<String> members=new ArrayList<>();
+    private List<String> members = new ArrayList<>();
 
-    public EditTeamForm(Team team){
-        this.teamName=team.getName();
-        this.leaderUserId=team.getLeader().getUserId();
-        team.getMembers().forEach(o->{
+    public EditTeamForm(Team team) {
+        this.teamName = team.getName();
+        this.leaderUserId = team.getLeader().getUserId();
+        team.getMembers().forEach(o -> {
             members.add(o.getUserId());
         });
     }

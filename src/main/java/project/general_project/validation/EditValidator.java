@@ -16,8 +16,8 @@ public class EditValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         EditForm editForm = (EditForm) target;
-        if(!StringUtils.hasText(editForm.getFirstPhone())||!StringUtils.hasText(editForm.getSecondPhone())||!StringUtils.hasText(editForm.getThirdPhone())){
-            errors.rejectValue("firstPhone","phoneCheck");
+        if (!StringUtils.hasText(editForm.getFirstPhone()) || !StringUtils.hasText(editForm.getSecondPhone()) || !StringUtils.hasText(editForm.getThirdPhone())) {
+            errors.rejectValue("firstPhone", "phoneCheck");
         }
 
     }

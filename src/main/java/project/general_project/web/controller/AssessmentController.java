@@ -25,22 +25,22 @@ public class AssessmentController {
     private final MemberService memberService;
 
     @GetMapping("/alarm/{alarmId}/assessment/{id}")
-    public String assessmentForm(@Login Member member, @PathVariable Long id, Model model){
+    public String assessmentForm(@Login Member member, @PathVariable Long id, Model model) {
         Member toMember = memberService.findById(id);
         Member fromMember = memberService.findById(member.getId());
-        AssessmentForm form=new AssessmentForm(toMember.getUserId(),fromMember.getUserId());
-        model.addAttribute("assessmentForm",form);
+        AssessmentForm form = new AssessmentForm(toMember.getUserId(), fromMember.getUserId());
+        model.addAttribute("assessmentForm", form);
         return "assessment/addAssessmentForm";
     }
 
     @PostMapping("/alarm/{alarmId}/assessment/{id}")
-    public String addAssessment(@Validated @ModelAttribute("assessmentForm") AssessmentForm form, BindingResult bindingResult,@PathVariable("alarmId") Long id){
-        if(bindingResult.hasErrors()){
+    public String addAssessment(@Validated @ModelAttribute("assessmentForm") AssessmentForm form, BindingResult bindingResult, @PathVariable("alarmId") Long id) {
+        if (bindingResult.hasErrors()) {
             return "assessment/addAssessmentForm";
         }
         Member toMember = memberService.findByUserId(form.getToMemberId());
         Member fromMember = memberService.findByUserId(form.getFromMemberId());
-        assessmentService.createAssessment(toMember,fromMember,form.getContent(),form.getScore());
+        assessmentService.createAssessment(toMember, fromMember, form.getContent(), form.getScore());
         alarmService.changeReadState(id);
         return "redirect:/";
     }

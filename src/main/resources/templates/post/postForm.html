@@ -10,7 +10,7 @@
     <form th:action method="post" th:object="${postForm}" class="post-form">
         <h2 class="post-title">게시글</h2>
 
-        <label for="title" class="post-label" >제목</label>
+        <label for="title" class="post-label">제목</label>
         <input type="text" th:field="*{title}" id="title" class="post-input" placeholder="제목을 입력하세요" disabled>
         <p th:errors="*{title}" class="error"></p>
 
@@ -21,39 +21,50 @@
 
         <div class="post-meta">
             <p class="post-writer"><strong>작성자:</strong> <span th:text="${postForm.writer}">작성자</span></p>
-            <p class="post-date"><strong>작성일:</strong> <span th:text="${#temporals.format(postForm.create, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
-            <p class="post-recruitment"><strong>난이도:</strong> <span th:text="${postForm.levelStatus.getDescription()}">난이도</span></p>
-            <p class="post-recruitment"><strong>현재 모집 상태:</strong> <span th:text="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}?'모집 종료':'모집 중'">모집 상태</span></p>
+            <p class="post-date"><strong>작성일:</strong> <span
+                    th:text="${#temporals.format(postForm.create, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
+            <p class="post-recruitment"><strong>난이도:</strong> <span th:text="${postForm.levelStatus.getDescription()}">난이도</span>
+            </p>
+            <p class="post-recruitment"><strong>현재 모집 상태:</strong> <span
+                    th:text="${postForm.status==T(project.general_project.domain.RecruitmentStatus).COMP}?'모집 종료':'모집 중'">모집 상태</span>
+            </p>
         </div>
     </form>
 
     <div class="comments-container">
-        <form th:object="${commentForm}" method="post" th:action="@{|/post/${postForm.getPostId()}/comments/new|}" class="comment-form">
+        <form th:object="${commentForm}" method="post" th:action="@{|/post/${postForm.getPostId()}/comments/new|}"
+              class="comment-form">
             <label for="content" class="comment-label">댓글 달기</label>
             <div class="comment-input-group">
-                <textarea  th:field="*{content}" id="content" class="comment-input"></textarea>
+                <textarea th:field="*{content}" id="content" class="comment-input"></textarea>
                 <input type="submit" th:value="|댓글 달기|" class="comment-button">
             </div>
         </form>
         <div th:each="comment:${comments}" class="comment-item">
             <div class="comment-header">
                 <p class="comment-username" th:text="${comment.username}"></p>
-                <span class="comment-timestamp" th:text="${#temporals.format(comment.created, 'yyyy-MM-dd HH:mm')}"></span>
+                <span class="comment-timestamp"
+                      th:text="${#temporals.format(comment.created, 'yyyy-MM-dd HH:mm')}"></span>
             </div>
             <div class="comment-content" th:utext="${#strings.replace(comment.content, '\n', '<br/>')}"></div>
-            <form th:object="${commentForm}" method="post" th:action="@{|/post/${postForm.getPostId()}/comments/${comment.id}/new|}" class="child-comment-form">
+            <form th:object="${commentForm}" method="post"
+                  th:action="@{|/post/${postForm.getPostId()}/comments/${comment.id}/new|}" class="child-comment-form">
                 <div class="comment-input-group">
                     <textarea class="child-comment-input" th:field="*{content}"></textarea>
                     <input type="submit" th:value="|댓글 달기|" class="child-comment-button">
                 </div>
             </form>
-            <button class="comment-toggle-button" th:onclick="|location.href='@{/post/{postId}?comment={id} (postId=${postForm.postId},id=${comment.id})}'|" type="button">댓글 열기</button>
+            <button class="comment-toggle-button"
+                    th:onclick="|location.href='@{/post/{postId}?comment={id} (postId=${postForm.postId},id=${comment.id})}'|"
+                    type="button">댓글 열기
+            </button>
             <div th:if="${comment.id == id}" class="comment-reply-section">
                 <p class="related-comment-header">관련 댓글</p>
                 <div th:each="child:${children}" class="child-comment-item">
                     <div class="comment-input-group">
                         <p class="child-comment-username" th:text="${child.member.username}"></p>
-                        <span class="child-comment-timestamp" th:text="${#temporals.format(child.created, 'yyyy-MM-dd HH:mm')}"></span>
+                        <span class="child-comment-timestamp"
+                              th:text="${#temporals.format(child.created, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
                     <div class="comment-content" th:utext="${#strings.replace(child.content, '\n', '<br/>')}"></div>
                 </div>
@@ -62,10 +73,13 @@
     </div>
     <div class="pagination">
         <button th:if="${currentPage > 5}"
-                th:onclick="|location.href='@{/post/{postId}?page=1(postId=${postForm.postId})}'|">1</button>
+                th:onclick="|location.href='@{/post/{postId}?page=1(postId=${postForm.postId})}'|">1
+        </button>
 
         <button th:if="${currentPage > 5}"
-                th:onclick="|location.href='@{/post/{postId}?page={page}(postId=${postForm.postId}, page=${((currentPage - 1) / 5) * 5})}'|">...</button>
+                th:onclick="|location.href='@{/post/{postId}?page={page}(postId=${postForm.postId}, page=${((currentPage - 1) / 5) * 5})}'|">
+            ...
+        </button>
 
         <button th:each="i : ${#numbers.sequence(((currentPage - 1) / 5) * 5 + 1,
                                              (totalPages > (((currentPage - 1) / 5) + 1) * 5) ? (((currentPage - 1) / 5) + 1) * 5 : totalPages)}"
@@ -74,15 +88,21 @@
                 th:classappend="${currentPage == i} ? 'active' : ''"></button>
 
         <button th:if="${totalPages > (((currentPage - 1) / 5) + 1) * 5}"
-                th:onclick="|location.href='@{/post/{postId}?page={page}(postId=${postForm.postId}, page=${(((currentPage - 1) / 5) + 1) * 5 + 1})}'|">...</button>
+                th:onclick="|location.href='@{/post/{postId}?page={page}(postId=${postForm.postId}, page=${(((currentPage - 1) / 5) + 1) * 5 + 1})}'|">
+            ...
+        </button>
 
         <button th:if="${totalPages > (((currentPage - 1) / 5) + 1) * 5}"
                 th:onclick="|location.href='@{/post/{postId}?page={totalPages}(postId=${postForm.postId}, page=${totalPages})}'|"
                 th:text="${totalPages}"></button>
     </div>
 
-    <button th:if="${isWriter}" th:onclick="|location.href='@{/post/{postId}/edit (postId=${postForm.postId})}'|" type="button" class="home-button">수정하기</button>
-    <button th:if="${isWriter}" th:onclick="|sendPostRequest('@{/post/{postId}/delete (postId=${postForm.postId})}')|" type="button" class="home-button">삭제하기</button>
+    <button th:if="${isWriter}" th:onclick="|location.href='@{/post/{postId}/edit (postId=${postForm.postId})}'|"
+            type="button" class="home-button">수정하기
+    </button>
+    <button th:if="${isWriter}" th:onclick="|sendPostRequest('@{/post/{postId}/delete (postId=${postForm.postId})}')|"
+            type="button" class="home-button">삭제하기
+    </button>
     <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
 </div>
 

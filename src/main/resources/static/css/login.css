@@ -20,9 +20,10 @@ body {
     align-items: center;
 }
 
-.login-form{
+.login-form {
     width: 80%;
 }
+
 .login-title {
     font-size: 24px;
     margin-bottom: 1rem;

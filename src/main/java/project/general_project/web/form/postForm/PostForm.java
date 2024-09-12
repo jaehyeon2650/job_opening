@@ -1,6 +1,5 @@
 package project.general_project.web.form.postForm;
 
-import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,21 +21,21 @@ public class PostForm {
     private LocalDateTime create;
     private LevelStatus levelStatus;
 
-    public PostForm(String title, String content,RecruitmentStatus status,Long postId,String writer,LocalDateTime create,LevelStatus levelStatus) {
+    public PostForm(String title, String content, RecruitmentStatus status, Long postId, String writer, LocalDateTime create, LevelStatus levelStatus) {
         this.title = title;
         this.content = content;
-        this.status=status;
-        this.postId=postId;
-        this.writer=writer;
-        this.create=create;
-        this.levelStatus=levelStatus;
+        this.status = status;
+        this.postId = postId;
+        this.writer = writer;
+        this.create = create;
+        this.levelStatus = levelStatus;
     }
 
-    public PostForm(String title, String content,RecruitmentStatus status,Long postId,LevelStatus levelStatus) {
+    public PostForm(String title, String content, RecruitmentStatus status, Long postId, LevelStatus levelStatus) {
         this.title = title;
         this.content = content;
-        this.status=status;
-        this.postId=postId;
-        this.levelStatus=levelStatus;
+        this.status = status;
+        this.postId = postId;
+        this.levelStatus = levelStatus;
     }
 }

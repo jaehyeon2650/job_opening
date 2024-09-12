@@ -15,28 +15,28 @@ public class PictureStore {
     @Value("${file.dir}")
     private String fileDir;
 
-    public String getFullPath(String name){
-        return fileDir+name;
-    }
-
-    public Picture savePicture(MultipartFile multipartFile) throws IOException {
-        if(multipartFile.isEmpty()) return null;
-
-        String originalFilename = multipartFile.getOriginalFilename();
-        String saveFileName = createSaveFileName(originalFilename);
-        multipartFile.transferTo(new File(getFullPath(saveFileName)));
-
-        return new Picture(originalFilename,saveFileName);
-    }
-
     private static String createSaveFileName(String originalFilename) {
         String ext = extractExt(originalFilename);
-        String uuid= UUID.randomUUID().toString();
-        return uuid+"."+ext;
+        String uuid = UUID.randomUUID().toString();
+        return uuid + "." + ext;
     }
 
     private static String extractExt(String originalFilename) {
         int index = originalFilename.lastIndexOf(".");
         return originalFilename.substring(index + 1);
+    }
+
+    public String getFullPath(String name) {
+        return fileDir + name;
+    }
+
+    public Picture savePicture(MultipartFile multipartFile) throws IOException {
+        if (multipartFile.isEmpty()) return null;
+
+        String originalFilename = multipartFile.getOriginalFilename();
+        String saveFileName = createSaveFileName(originalFilename);
+        multipartFile.transferTo(new File(getFullPath(saveFileName)));
+
+        return new Picture(originalFilename, saveFileName);
     }
 }

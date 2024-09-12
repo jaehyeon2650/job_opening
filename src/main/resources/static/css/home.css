@@ -18,9 +18,11 @@ body {
     align-items: center;
     box-sizing: border-box;
 }
-.home_header{
+
+.home_header {
     justify-content: flex-end;
 }
+
 .welcome {
     font-size: 1.5em;
 }

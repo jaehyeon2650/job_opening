@@ -16,26 +16,26 @@ public class CommentService {
     private final CommentRepository repository;
 
     @Transactional
-    public void saveInPost(Comment comment){
+    public void saveInPost(Comment comment) {
         repository.save(comment);
     }
 
     @Transactional
-    public void saveInComment(Comment comment,Long parentId){
+    public void saveInComment(Comment comment, Long parentId) {
         Comment parent = repository.findById(parentId);
         parent.addComment(comment);
         repository.save(comment);
     }
 
-    public List<Comment> findCommentByPost(Long postId,int start,int size){
-        return repository.findCommentByPost(postId,start,size);
+    public List<Comment> findCommentByPost(Long postId, int start, int size) {
+        return repository.findCommentByPost(postId, start, size);
     }
 
-    public List<Comment> findCommentByParentId(Long parentId){
+    public List<Comment> findCommentByParentId(Long parentId) {
         return repository.findCommentByParentId(parentId);
     }
 
-    public Long getMainCommentCount(Long postId){
+    public Long getMainCommentCount(Long postId) {
         return repository.getMainCommentCount(postId);
     }
 }

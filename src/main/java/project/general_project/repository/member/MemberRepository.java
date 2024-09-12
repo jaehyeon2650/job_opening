@@ -9,9 +9,13 @@ import java.util.Optional;
 
 public interface MemberRepository {
     void save(Member member);
+
     Member findById(Long id);
+
     Optional<Member> findByUserID(String userId);
+
     Member findByIdWithTeam(Long id);
+
     List<Member> findMembersByUserId(List<String> ids);
 
     void setTeam(List<Long> ids, Team team);

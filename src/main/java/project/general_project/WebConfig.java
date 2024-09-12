@@ -14,7 +14,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).order(1).addPathPatterns("/**").excludePathPatterns("/","/css/**","/*.ico","/error","/login","/logout","/join","/post/*");
+        registry.addInterceptor(new LoginInterceptor()).order(1).addPathPatterns("/**").excludePathPatterns("/", "/css/**", "/*.ico", "/error", "/login", "/logout", "/join", "/post/*");
     }
 
     @Override

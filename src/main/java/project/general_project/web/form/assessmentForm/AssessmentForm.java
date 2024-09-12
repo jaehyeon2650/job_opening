@@ -7,27 +7,28 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 @Data
-@Getter @Setter
+@Getter
+@Setter
 public class AssessmentForm {
     private String toMemberId;
     private String fromMemberId;
     @NotEmpty
     private String content;
-    @Range(min=0,max = 10)
+    @Range(min = 0, max = 10)
     private int score;
 
     public AssessmentForm() {
     }
 
-    public AssessmentForm(String toMemberId, String content, int score,String fromMemberId) {
+    public AssessmentForm(String toMemberId, String content, int score, String fromMemberId) {
         this.toMemberId = toMemberId;
         this.content = content;
         this.score = score;
-        this.fromMemberId=fromMemberId;
+        this.fromMemberId = fromMemberId;
     }
 
-    public AssessmentForm(String toMemberId,String fromMemberId) {
+    public AssessmentForm(String toMemberId, String fromMemberId) {
         this.toMemberId = toMemberId;
-        this.fromMemberId=fromMemberId;
+        this.fromMemberId = fromMemberId;
     }
 }
