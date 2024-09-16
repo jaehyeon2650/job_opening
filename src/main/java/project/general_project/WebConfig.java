@@ -2,24 +2,22 @@ package project.general_project;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import project.general_project.web.argumentResolver.LoginArgumentResolver;
-import project.general_project.web.interceptor.LoginInterceptor;
+import project.general_project.web.argumentResolver.SecurityLoginArgumentResolver;
 
 import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).order(1).addPathPatterns("/**").excludePathPatterns("/", "/css/**", "/*.ico", "/error", "/login", "/logout", "/join", "/post/*");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new LoginInterceptor()).order(1).addPathPatterns("/**").excludePathPatterns("/", "/css/**", "/*.ico", "/error", "/login", "/logout", "/join", "/post/*");
+//    }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginArgumentResolver());
+        resolvers.add(new SecurityLoginArgumentResolver());
     }
 
     @Override
