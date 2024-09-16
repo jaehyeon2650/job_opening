@@ -37,7 +37,9 @@ public class SecurityConfig {
             form.failureForwardUrl("/loginFail");
             form.failureHandler(authenticationFailureHandler());
             form.usernameParameter("id");
-
+        });
+        http.logout(logout->{
+            logout.logoutSuccessUrl("/");
         });
         return http.build();
     }
