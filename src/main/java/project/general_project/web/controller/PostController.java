@@ -42,7 +42,7 @@ public class PostController {
     }
 
     private static void addModelIsWriter(Model model, Member loginMember, Post post) {
-        if (loginMember == null || loginMember.getId() != post.getMember().getId()) {
+        if (loginMember == null || !loginMember.getId().equals( post.getMember().getId())) {
             model.addAttribute("isWriter", false);
         } else {
             model.addAttribute("isWriter", true);
@@ -61,7 +61,7 @@ public class PostController {
 
     @GetMapping("/{id}/post/new")
     public String addPostForm(@ModelAttribute("postForm") PostForm postForm, @Login Member loginMember, @PathVariable("id") Long memberId) {
-        if (loginMember == null || loginMember.getId() != memberId) return "redirect:/login";
+        if (loginMember == null || !loginMember.getId().equals(memberId)) return "redirect:/login";
         return "post/addForm";
     }
 
@@ -71,7 +71,7 @@ public class PostController {
             return "post/addForm";
         }
         Member findMember = memberService.findById(memberId);
-        if (loginMember.getId() != findMember.getId()) {
+        if (!loginMember.getId().equals(findMember.getId())) {
             return "redirect:/login";
         }
         Post post = Post.createPost(findMember, postForm.getTitle(), postForm.getContent(), postForm.getLevelStatus());
@@ -174,7 +174,7 @@ public class PostController {
         Optional<Post> findPost = postService.findByIdWithMember(postId);
         if (findPost.isEmpty()) return "redirect:/";
         Post post = findPost.get();
-        if (loginMember.getId() != post.getMember().getId()) return "redirect:/";
+        if (!loginMember.getId().equals(post.getMember().getId())) return "redirect:/";
         EditPostForm editPostForm = new EditPostForm(post.getTitle(), post.getContent(), post.getStatus(), post.getId(), post.getLevelStatus());
         model.addAttribute("editPostForm", editPostForm);
         return "post/editForm";
@@ -183,7 +183,7 @@ public class PostController {
     @PostMapping("/post/{postId}/edit")
     public String editPost(@Validated @ModelAttribute("editPostForm") EditPostForm editPostForm, BindingResult bindingResult, @Login Member loginMember, RedirectAttributes redirectAttributes) {
         Post findPost = postService.findByIdWithMember(editPostForm.getPostId()).get();
-        if (findPost == null || findPost.getMember().getId() != loginMember.getId()) return "redirect:/";
+        if (findPost == null || !findPost.getMember().getId().equals(loginMember.getId())) return "redirect:/";
         if (bindingResult.hasErrors()) {
             return "post/editForm";
         }
