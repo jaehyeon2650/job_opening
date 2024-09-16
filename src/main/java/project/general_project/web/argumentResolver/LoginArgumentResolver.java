@@ -9,12 +9,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import project.general_project.domain.Member;
 import project.general_project.web.SessionConst;
-import project.general_project.web.form.memberForm.Login;
+import project.general_project.web.form.memberForm.SessionLogin;
 
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
+        boolean hasLoginAnnotation = parameter.hasParameterAnnotation(SessionLogin.class);
         boolean hasMemberType = Member.class.isAssignableFrom(parameter.getParameterType());
         return hasLoginAnnotation || hasMemberType;
     }
@@ -26,7 +26,6 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
             return null;
         }
-
         return session.getAttribute(SessionConst.LOGIN_MEMBER);
     }
 }
