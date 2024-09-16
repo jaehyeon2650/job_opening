@@ -56,15 +56,27 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, @Login Member member) {
+    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, @Login Member member) {
         if (member != null) {
             return "redirect:/loginHome";
         }
         return "member/login";
     }
 
-    @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURI) {
+    @PostMapping("/loginFail")
+    public String postloginFail(@ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult, @Login Member member,HttpServletRequest request) {
+        log.info("loginFail 돌입");
+        if (member != null) {
+            return "redirect:/loginHome";
+        }
+        if (bindingResult.hasErrors()) {
+            return "member/login";
+        }
+        bindingResult.reject("loginFail", (String) request.getAttribute("errorMessage"));
+        return "member/login";
+    }
+//    @PostMapping("/login")
+    public String login(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURI) {
 
         if (bindingResult.hasErrors()) {
             return "member/login";
