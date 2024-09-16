@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository repository;
     private final PictureStore pictureStore;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long save(Member member) {
