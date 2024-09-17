@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,11 @@ public class MemberController {
     private final JoinValidator joinValidator;
     private final EditValidator editValidator;
 
+    @Value("${client_id}")
+    private String client_id;
+    @Value("${redirect_uri}")
+    private String redirect_uri;
+
     @InitBinder("joinForm")
     public void init(WebDataBinder dataBinder) {
         dataBinder.addValidators(joinValidator);
@@ -56,15 +62,17 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, @Login Member member) {
+    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, @Login Member member,Model model) {
         if (member != null) {
             return "redirect:/loginHome";
         }
+        model.addAttribute("client_id",client_id);
+        model.addAttribute("redirect_uri",redirect_uri);
         return "member/login";
     }
 
     @PostMapping("/loginFail")
-    public String postLoginFail(@ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult, @Login Member member,HttpServletRequest request) {
+    public String postLoginFail(@ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult, @Login Member member,HttpServletRequest request,Model model) {
         log.info("loginFail 돌입");
         if (member != null) {
             return "redirect:/loginHome";
@@ -73,6 +81,8 @@ public class MemberController {
             return "member/login";
         }
         bindingResult.reject("loginFail", (String) request.getAttribute("errorMessage"));
+        model.addAttribute("client_id",client_id);
+        model.addAttribute("redirect_uri",redirect_uri);
         return "member/login";
     }
 //    @PostMapping("/login")
