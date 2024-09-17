@@ -64,7 +64,7 @@ public class MemberController {
     }
 
     @PostMapping("/loginFail")
-    public String postloginFail(@ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult, @Login Member member,HttpServletRequest request) {
+    public String postLoginFail(@ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult, @Login Member member,HttpServletRequest request) {
         log.info("loginFail 돌입");
         if (member != null) {
             return "redirect:/loginHome";
