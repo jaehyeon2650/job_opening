@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,7 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize->
-                               authorize.requestMatchers("/error", "/login","/loginFail", "/logout", "/join", "/","/css/**", "/*.ico","/img/**","/auth/**").permitAll()
+                               authorize.requestMatchers("/error", "/login","/loginFail", "/logout", "/join", "/","/css/**", "/*.ico","/img/**","/auth/**","/post/*").permitAll()
                                        .anyRequest().authenticated());
         http.formLogin(form->{
             form.loginPage("/login");
