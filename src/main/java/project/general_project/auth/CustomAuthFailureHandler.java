@@ -24,8 +24,6 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
             errorMessage="비밀번호가 맞지 않습니다.";
         }
 
-
-        log.info("Authentication 실패: " + errorMessage); // 로그 추가
         request.setAttribute("errorMessage",errorMessage);
         request.getRequestDispatcher("/loginFail").forward(request,response);
 
