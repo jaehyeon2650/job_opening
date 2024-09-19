@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.general_project.auth.provider.GoogleUserInfo;
 import project.general_project.domain.Member;
 import project.general_project.repository.member.MemberRepository;
 
@@ -33,10 +34,17 @@ public class PrincipleOauth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println(oAuth2User.getAttributes());
 
+        OAuth2UserInfo oAuth2UserInfo=null;
         String provider=userRequest.getClientRegistration().getRegistrationId();
         String email= (String) oAuth2User.getAttributes().get("email");
         String userId= provider+"_"+email;
         String name= (String) oAuth2User.getAttributes().get("family_name");
+        if(provider.equals("google")){
+            oAuth2UserInfo=new GoogleUserInfo(oAuth2User.getAttributes());
+        String email= oAuth2UserInfo.getEmail();
+        String userId= oAuth2UserInfo.getUserId();
+        String name= oAuth2UserInfo.getName();
+
         Optional<Member> findMember = repository.findByUserID(userId);
         Member member=null;
         if(findMember.isEmpty()){
