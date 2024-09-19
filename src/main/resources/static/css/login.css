@@ -86,3 +86,39 @@ body {
     margin-bottom: 1rem;
     font-size: 10px;
 }
+
+.custom-fb-login-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4267B2;
+    color: white;
+    width: 189px;
+    height: 35px;
+    padding: 3px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.custom-fb-login-button img {
+    vertical-align: middle;
+    margin-right: 8px;
+    width: 20px;
+}
+
+.custom-fb-login-button:hover {
+    background-color: #365899;
+}
+
+.login-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+
+
