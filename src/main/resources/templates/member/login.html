@@ -25,7 +25,8 @@
 
         <button type="submit" class="login-button">로그인</button>
         <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
-        <a th:href="|https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code|"><img th:src="@{/img/kakao_login_button.png}" src="/img/kakao_login_button.png"></a>
+        <a th:href="|/oauth2/authorization/google|"><img th:src="@{/img/google_button.png}" src="/img/google_button.png"></a>
+<!--        <a th:href="|https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code|"><img th:src="@{/img/kakao_login_button.png}" src="/img/kakao_login_button.png"></a>-->
     </form>
 </div>
 </body>
