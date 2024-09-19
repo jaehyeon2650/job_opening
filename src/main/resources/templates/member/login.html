@@ -25,12 +25,14 @@
 
         <button type="submit" class="login-button">로그인</button>
         <button th:onclick="|location.href='@{/}'|" type="button" class="home-button">홈으로</button>
-        <a th:href="|/oauth2/authorization/google|"><img th:src="@{/img/google_button.png}" src="/img/google_button.png"></a>
-        <a th:href="|/oauth2/authorization/facebook|" class="custom-fb-login-button">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" style="width: 20px; vertical-align: middle; margin-right: 8px;">
-            Facebook으로 계속하기
-        </a>
-        <a th:href="|/oauth2/authorization/naver|"><img th:src="@{/img/naver_button.png}" src="/img/naver_button.png"></a>
+        <div class="login-buttons">
+            <a th:href="|/oauth2/authorization/google|"><img th:src="@{/img/google_button.png}" src="/img/google_button.png"></a>
+            <a th:href="|/oauth2/authorization/facebook|" class="custom-fb-login-button">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" >
+                Facebook으로 계속하기
+            </a>
+            <a th:href="|/oauth2/authorization/naver|"><img th:src="@{/img/naver_button.png}" src="/img/naver_button.png" width="189px" height="40px"></a>
+        </div>
 <!--        <a th:href="|https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code|"><img th:src="@{/img/kakao_login_button.png}" src="/img/kakao_login_button.png"></a>-->
     </form>
 </div>
