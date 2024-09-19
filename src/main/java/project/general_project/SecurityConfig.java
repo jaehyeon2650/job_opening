@@ -30,8 +30,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize->
-                               authorize.requestMatchers("/error", "/login","/loginFail", "/logout", "/join", "/","/css/**", "/*.ico","/img/**","/auth/**","/post/*").permitAll()
+                               authorize.requestMatchers("/error", "/login","/loginFail", "/logout", "/join", "/","/css/**", "/*.ico","/img/**","/auth/**","/post/*","/oauth2/**").permitAll()
                                        .anyRequest().authenticated());
+        http.oauth2Login(oauth2Login->{
+            oauth2Login.loginPage("/login");
+        });
         http.formLogin(form->{
             form.loginPage("/login");
             form.defaultSuccessUrl("/loginHome");
