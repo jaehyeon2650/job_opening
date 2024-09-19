@@ -16,6 +16,7 @@ import project.general_project.auth.provider.OAuth2UserInfo;
 import project.general_project.domain.Member;
 import project.general_project.repository.member.MemberRepository;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -55,7 +56,7 @@ public class PrincipleOauth2UserService extends DefaultOAuth2UserService {
         Member member=null;
         if(findMember.isEmpty()){
             member=Member.createMember(name,userId,passwordEncoder.encode(password),null,email,null);
-            member.setOauth(userRequest.getClientRegistration().getRegistrationId());
+            member.setOauth(oAuth2UserInfo.getProvider());
             repository.save(member);
         }else{
             member=findMember.get();
