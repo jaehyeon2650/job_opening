@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 public class MemberForm {
     private Long id;
+    private String userId;
     private String username;
     private String firstPhone;
     private String SecondPhone;
@@ -29,15 +30,20 @@ public class MemberForm {
     public MemberForm(Member member, List<Post> posts, String savedPath, double score) {
         this.score = score;
         this.id = member.getId();
+        this.userId=member.getUserId();
         this.username = member.getUsername();
         String phone = member.getPhone();
-        this.firstPhone = phone.substring(0, 3);
-        SecondPhone = phone.substring(3, 7);
-        ThirdPhone = phone.substring(7);
+        if(phone!=null){
+            this.firstPhone = phone.substring(0, 3);
+            SecondPhone = phone.substring(3, 7);
+            ThirdPhone = phone.substring(7);
+        }
         this.email = member.getEmail();
-        this.zipcode = member.getAddress().getZipcode();
-        this.city = member.getAddress().getCity();
-        this.detailAddress = member.getAddress().getDetailAddress();
+        if(member.getAddress()!=null){
+            this.zipcode = member.getAddress().getZipcode();
+            this.city = member.getAddress().getCity();
+            this.detailAddress = member.getAddress().getDetailAddress();
+        }
         if (member.getTeam() != null) {
             this.teamName = member.getTeam().getName();
             this.teamId = member.getTeam().getId();

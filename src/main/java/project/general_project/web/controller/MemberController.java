@@ -136,7 +136,7 @@ public class MemberController {
 
     @GetMapping("/member/{id}/edit")
     public String memberEditForm(@PathVariable("id") Long memerId, Model model, @Login Member loginMember) {
-        if (loginMember.getId() != memerId) return "redirect:/";
+        if (!loginMember.getId().equals(memerId)) return "redirect:/";
         Member findMember = memberService.findById(memerId);
         EditForm editForm = null;
         if (findMember.getPicture() != null) {
@@ -148,7 +148,7 @@ public class MemberController {
 
     @PostMapping("/member/{id}/edit")
     public String editMember(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @PathVariable("id") Long memberId, Model model, @Login Member loginMember, RedirectAttributes redirectAttributes) throws IOException {
-        if (loginMember.getId() != memberId) return "redirect:/";
+        if (!loginMember.getId().equals(memberId)) return "redirect:/";
 
         if (bindingResult.hasErrors()) {
             log.info("error");
