@@ -32,13 +32,18 @@ public class EditForm {
         this.id = member.getId();
         this.username = member.getUsername();
         String phone = member.getPhone();
-        this.firstPhone = phone.substring(0, 3);
-        SecondPhone = phone.substring(3, 7);
-        ThirdPhone = phone.substring(7);
+        if(phone!=null){
+            this.firstPhone = phone.substring(0, 3);
+            this.SecondPhone = phone.substring(3, 7);
+            this.ThirdPhone = phone.substring(7);
+
+        }
         this.email = member.getEmail();
-        this.zipcode = member.getAddress().getZipcode();
-        this.city = member.getAddress().getCity();
-        this.detailAddress = member.getAddress().getDetailAddress();
+        if(member.getAddress()!=null){
+            this.zipcode = member.getAddress().getZipcode();
+            this.city = member.getAddress().getCity();
+            this.detailAddress = member.getAddress().getDetailAddress();
+        }
         this.savedUrl = savedUrl;
     }
 

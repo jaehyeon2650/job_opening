@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,11 @@ public class MemberController {
     private final JoinValidator joinValidator;
     private final EditValidator editValidator;
 
+    @Value("${client_id}")
+    private String client_id;
+    @Value("${redirect_uri}")
+    private String redirect_uri;
+
     @InitBinder("joinForm")
     public void init(WebDataBinder dataBinder) {
         dataBinder.addValidators(joinValidator);
@@ -56,15 +62,31 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, @Login Member member) {
+    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm, @Login Member member,Model model) {
         if (member != null) {
             return "redirect:/loginHome";
         }
+        model.addAttribute("client_id",client_id);
+        model.addAttribute("redirect_uri",redirect_uri);
         return "member/login";
     }
 
-    @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURI) {
+    @PostMapping("/loginFail")
+    public String postLoginFail(@ModelAttribute("loginForm") LoginForm loginForm,BindingResult bindingResult, @Login Member member,HttpServletRequest request,Model model) {
+        log.info("loginFail 돌입");
+        if (member != null) {
+            return "redirect:/loginHome";
+        }
+        if (bindingResult.hasErrors()) {
+            return "member/login";
+        }
+        bindingResult.reject("loginFail", (String) request.getAttribute("errorMessage"));
+        model.addAttribute("client_id",client_id);
+        model.addAttribute("redirect_uri",redirect_uri);
+        return "member/login";
+    }
+//    @PostMapping("/login")
+    public String login(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURI) {
 
         if (bindingResult.hasErrors()) {
             return "member/login";
@@ -103,7 +125,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/logout")
+//    @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -114,7 +136,7 @@ public class MemberController {
 
     @GetMapping("/member/{id}/edit")
     public String memberEditForm(@PathVariable("id") Long memerId, Model model, @Login Member loginMember) {
-        if (loginMember.getId() != memerId) return "redirect:/";
+        if (!loginMember.getId().equals(memerId)) return "redirect:/";
         Member findMember = memberService.findById(memerId);
         EditForm editForm = null;
         if (findMember.getPicture() != null) {
@@ -126,7 +148,7 @@ public class MemberController {
 
     @PostMapping("/member/{id}/edit")
     public String editMember(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @PathVariable("id") Long memberId, Model model, @Login Member loginMember, RedirectAttributes redirectAttributes) throws IOException {
-        if (loginMember.getId() != memberId) return "redirect:/";
+        if (!loginMember.getId().equals(memberId)) return "redirect:/";
 
         if (bindingResult.hasErrors()) {
             log.info("error");

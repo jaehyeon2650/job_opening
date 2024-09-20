@@ -21,7 +21,9 @@
             </div>
 
         </div>
-
+        <label th:if="${loginMember.id == memberForm.id}" for="userId" class="join-label">아이디</label>
+        <input th:if="${loginMember.id == memberForm.id}" type="text" th:field="*{userId}" id="userId" class="join-input"
+               disabled>
         <div>
             <label for="score" class="join-label">프로젝트 점수</label>
             <div class="score-detail">
@@ -33,12 +35,12 @@
 
         <label th:if="${loginMember.id == memberForm.id}" for="firstPhone" class="join-label">핸드폰 번호</label>
         <div th:if="${loginMember.id == memberForm.id}" class="phone-input-group">
-            <input type="number" th:field="*{firstPhone}" id="firstPhone" class="phone-input" placeholder="010"
+            <input type="number" th:field="*{firstPhone}" th:value="*{firstPhone != null ? firstPhone : ''}" id="firstPhone" class="phone-input" placeholder="010"
                    maxlength="3" disabled/>
             <span class="phone-dash">-</span>
-            <input type="number" th:field="*{secondPhone}" id="secondPhone" class="phone-input" maxlength="4" disabled/>
+            <input type="number" th:field="*{secondPhone}" th:value="*{secondPhone != null ? secondPhone : ''}" id="secondPhone" class="phone-input" maxlength="4" disabled/>
             <span class="phone-dash">-</span>
-            <input type="number" th:field="*{thirdPhone}" id="thirdPhone" class="phone-input" maxlength="4" disabled/>
+            <input type="number" th:field="*{thirdPhone}" th:value="*{thirdPhone != null ? thirdPhone : ''}" id="thirdPhone" class="phone-input" maxlength="4" disabled/>
         </div>
 
 
@@ -48,17 +50,17 @@
 
 
         <label th:if="${loginMember.id == memberForm.id}" for="zipcode" class="join-label">우편번호</label>
-        <input th:if="${loginMember.id == memberForm.id}" type="text" th:field="*{zipcode}" id="zipcode"
+        <input th:if="${loginMember.id == memberForm.id}" th:value="*{zipcode != null ? zipcode : ''}" type="text" th:field="*{zipcode}" id="zipcode"
                class="join-input" disabled>
 
 
         <label th:if="${loginMember.id == memberForm.id}" for="city" class="join-label">시,군</label>
-        <input th:if="${loginMember.id == memberForm.id}" type="text" th:field="*{city}" id="city" class="join-input"
+        <input th:if="${loginMember.id == memberForm.id}" type="text" th:value="*{city != null ? city : ''}" id="city" th:field="*{city}" class="join-input"
                disabled>
 
 
         <label th:if="${loginMember.id == memberForm.id}" for="detailAddress" class="join-label">세부 주소</label>
-        <input th:if="${loginMember.id == memberForm.id}" type="text" th:field="*{detailAddress}" id="detailAddress"
+        <input th:if="${loginMember.id == memberForm.id}" type="text" th:value="*{detailAddress != null ? detailAddress : ''}" th:field="*{detailAddress}" id="detailAddress"
                class="join-input" disabled>
 
 
